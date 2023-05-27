@@ -1,4 +1,4 @@
 # RsgCel
 
-Un programma simile a Excel creato in Python.
-Lavoro scolastico
+Progetto a scopo didattico <br>
+Programma simile ad Excel totalmente in Python
