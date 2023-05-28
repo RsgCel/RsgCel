@@ -89,26 +89,28 @@ class Finestra(wx.Frame):
 
         # crea un menù File
         fileMenu = wx.Menu()
-
+        
+        # Creazione Item Menu File
+        customItemDOCRec = wx.MenuItem(fileMenu, ID_DOCRec, "Documenti recenti")
+        customItemSalvaNome = wx.MenuItem(fileMenu, ID_SalvaNome, "Salva con nome ")
+        customItemSalvaCopia = wx.MenuItem(fileMenu, ID_SalvaCopia, "Salva una copia")
+        customItemImpSta = wx.MenuItem(fileMenu, ID_ImpSta, "Impostazioni stampante")
+        customItemProprietà = wx.MenuItem(fileMenu, ID_Proprietà, "Proprietà")
+        
         fileMenu.Append(wx.ID_NEW, "Nuovo")
         fileMenu.Append(wx.ID_OPEN, "Apri")
-        customItemDOCRec = wx.MenuItem(fileMenu, 1, "Documenti recenti")
         fileMenu.Append(customItemDOCRec)
         fileMenu.Append(wx.ID_CLOSE, "Chiudi")
         fileMenu.AppendSeparator()
         fileMenu.Append(wx.ID_REFRESH, "Ricarica")
         fileMenu.AppendSeparator()
         fileMenu.Append(wx.ID_SAVE, "Salva")
-        customItemSalvaNome = wx.MenuItem(fileMenu, 2, "Salva con nome ")
         fileMenu.Append(customItemSalvaNome)
-        customItemSalvaCopia = wx.MenuItem(fileMenu, 3, "Salva una copia")
-        fileMenu.Append(customItemSalvaCopia)
+        fileMenu.Append(customItemDOCRec)
         fileMenu.AppendSeparator()
         fileMenu.Append(wx.ID_PRINT, "Stampa")
-        customItemImpSta = wx.MenuItem(fileMenu, 4, "Impostazioni stampante")
         fileMenu.Append(customItemImpSta)
         fileMenu.AppendSeparator()
-        customItemProprietà = wx.MenuItem(fileMenu, 5, "Proprietà")
         fileMenu.Append(customItemProprietà)
         fileMenu.AppendSeparator()
         fileMenu.Append(wx.ID_EXIT, "Esci da GS Excel")
@@ -117,10 +119,14 @@ class Finestra(wx.Frame):
         
         # crea un menù Modifica
         editMenu = wx.Menu()
+        
+        # Creazione Item Menu Modifica
+        customItemRipeti = wx.MenuItem(editMenu, ID_Ripeti, "Ripeti")
+        customItemSele = wx.MenuItem(editMenu, ID_Seleziona, "Seleziona")
+        customItemTrovaESos = wx.MenuItem(editMenu, ID_TrovaESos, "Trova e sostituisci")
 
         editMenu.Append(wx.ID_UNDO, "Annulla")
         editMenu.Append(wx.ID_REDO, "Ripristina")
-        customItemRipeti = wx.MenuItem(editMenu, 6, "Ripeti")
         editMenu.Append(customItemRipeti)
         editMenu.AppendSeparator()
         editMenu.Append(wx.ID_CUT, "Tagia")
@@ -128,14 +134,89 @@ class Finestra(wx.Frame):
         editMenu.Append(wx.ID_PASTE, "Incolla")
         editMenu.AppendSeparator()
         editMenu.Append(wx.ID_SELECTALL, "Seleziona tutto")
-        customItemSele = wx.MenuItem(editMenu, 7, "Seleziona")
         editMenu.Append(customItemSele)
         editMenu.AppendSeparator()
         editMenu.Append(wx.ID_FIND, "Trova")
-        customItemTrovaESos = wx.MenuItem(editMenu, 8, "Trova e sostituisci")
         editMenu.Append(customItemTrovaESos)
         
         mb.Append(editMenu, '&Modifica')
+        
+        # crea menu Visualizza
+        viewMenu = wx.Menu()
+        
+        # Creazione Item Menu Visualizza
+        customItemBarraFormula = wx.MenuItem(viewMenu, ID_BarFor, "Barra della formula")
+        customItemBarraStato = wx.MenuItem(viewMenu, ID_BarStato, "Barra di stato")
+        customItemBarraLat = wx.MenuItem(viewMenu, ID_BarLat, "Barra laterale")
+        customItemStili = wx.MenuItem(viewMenu, ID_Stili, "Stili")
+        customItemGalleria = wx.MenuItem(viewMenu, ID_Gal, "Galleria")
+        customItemNavigatore = wx.MenuItem(viewMenu, ID_Nav, "Navigatore")
+        customItemListaFunzioni = wx.MenuItem(viewMenu, ID_ListaFun, "Lista funzioni")
+        customItemSorgenteDati = wx.MenuItem(viewMenu, ID_SorDati, "Sorgente dati")
+        customItemSchermoInt = wx.MenuItem(viewMenu, ID_ScheInt, "Schermo intero")
+        customItemZoom = wx.MenuItem(viewMenu, ID_Zoom, "Zoom")
+        
+        viewMenu.Append(customItemBarraFormula)
+        viewMenu.Append(customItemBarraStato)
+        viewMenu.AppendSeparator()
+        viewMenu.Append(customItemBarraLat)
+        viewMenu.Append(customItemStili)
+        viewMenu.Append(customItemGalleria)
+        viewMenu.Append(customItemNavigatore)
+        viewMenu.Append(customItemListaFunzioni)
+        viewMenu.Append(customItemSorgenteDati)
+        viewMenu.AppendSeparator()
+        viewMenu.Append(customItemSchermoInt)
+        viewMenu.Append(customItemZoom)
+    
+        mb.Append(viewMenu, '&Visualizza')
+        
+        # crea Menu Inserisci
+        insertMenu = wx.Menu()
+        
+        # Creazione Item menu Inserisci
+        customItemImg = wx.MenuItem(viewMenu, ID_Img, "Immagine")
+        customItemFunzione = wx.MenuItem(viewMenu, ID_Funzione, "Funzione")
+        customItemCollegamento = wx.MenuItem(viewMenu, ID_Collegamento, "Collegamento")
+        customItemCarattereSpeciale = wx.MenuItem(viewMenu, ID_CarSpeciale, "Carattere speciale")
+        customItemData = wx.MenuItem(viewMenu, ID_Data, "Data")
+        customItemOra = wx.MenuItem(viewMenu, ID_Ora, "Ora")
+        
+        insertMenu.Append(customItemImg)
+        insertMenu.AppendSeparator()
+        insertMenu.Append(customItemFunzione)
+        insertMenu.AppendSeparator()
+        insertMenu.Append(customItemCollegamento)
+        insertMenu.Append(customItemCarattereSpeciale)
+        insertMenu.AppendSeparator()
+        insertMenu.Append(customItemData)
+        insertMenu.Append(customItemOra)
+        
+        mb.Append(insertMenu, '&Inserisci')
+        
+        # crea menu Formato
+        formatoMenu = wx.Menu()
+        
+        # Creazione Item Menu Formato
+        customItemTesto = wx.MenuItem(viewMenu, ID_Testo, "Testo")
+        customItemSpaziatura = wx.MenuItem(viewMenu, ID_Spaziatura, "Spaziatura")
+        customItemAllinea = wx.MenuItem(viewMenu, ID_Allinea, "Allinea")
+        
+        formatoMenu.Append(customItemTesto)
+        formatoMenu.Append(customItemSpaziatura)
+        formatoMenu.Append(customItemAllinea)
+        
+        mb.Append(formatoMenu, '&Formato')
+        
+        # crea Menu Aiuto
+        helpMenu = wx.Menu()
+        
+        # Creazione Item menu Aiuto
+        customItemInfo = wx.MenuItem(helpMenu, 19, "Informazioni su RsgCel")
+        
+        helpMenu.Append(customItemInfo)
+        
+        mb.Append(helpMenu, '&Aiuto')
         
         self.SetMenuBar(mb)
         
@@ -153,7 +234,7 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneProprietà, id=ID_Proprietà)
         self.Bind(wx.EVT_MENU, self.funzioneEsci, id=wx.ID_EXIT)
         
-        # Bind Modifica File
+        # Bind Modifica
         self.Bind(wx.EVT_MENU, self.funzioneAnnulla, id=wx.ID_UNDO)
         self.Bind(wx.EVT_MENU, self.funzioneRipristina, id=wx.ID_REDO)
         self.Bind(wx.EVT_MENU, self.funzioneRipeti, id=ID_Ripeti)
@@ -164,6 +245,34 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneSeleziona, id=ID_Seleziona)
         self.Bind(wx.EVT_MENU, self.funzioneTrova, id=wx.ID_FIND)
         self.Bind(wx.EVT_MENU, self.funzioneTrovaeSostituisci, id=ID_TrovaESos)
+        
+        # Bind Visualizza
+        self.Bind(wx.EVT_MENU, self.funzioneBarraFormula, id=ID_BarFor)
+        self.Bind(wx.EVT_MENU, self.funzioneBarraStato, id=ID_BarStato)
+        self.Bind(wx.EVT_MENU, self.funzioneBarLat, id=ID_BarLat)
+        self.Bind(wx.EVT_MENU, self.funzioneStili, id=ID_Stili)
+        self.Bind(wx.EVT_MENU, self.funzioneGal, id=ID_Gal)
+        self.Bind(wx.EVT_MENU, self.funzioneNav, id=ID_Nav)
+        self.Bind(wx.EVT_MENU, self.funzioneListaFun, id=ID_ListaFun)
+        self.Bind(wx.EVT_MENU, self.funzioneSorgenteDati, id=ID_SorDati)
+        self.Bind(wx.EVT_MENU, self.funzioneSchermoIntero, id=ID_ScheInt)
+        self.Bind(wx.EVT_MENU, self.funzioneZoom, id=ID_Zoom)
+        
+        # Bind Inserisci
+        self.Bind(wx.EVT_MENU, self.funzioneImmagine, id=ID_Img)
+        self.Bind(wx.EVT_MENU, self.funzioneFunzione, id=ID_Funzione)
+        self.Bind(wx.EVT_MENU, self.funzioneCollegamento, id=ID_Collegamento)
+        self.Bind(wx.EVT_MENU, self.funzioneCarattereSpeciale, id=ID_CarSpeciale)
+        self.Bind(wx.EVT_MENU, self.funzioneData, id=ID_Data)
+        self.Bind(wx.EVT_MENU, self.funzioneOra, id=ID_Ora)
+        
+        # Bind Formato
+        self.Bind(wx.EVT_MENU, self.funzioneTesto, id=ID_Testo)
+        self.Bind(wx.EVT_MENU, self.funzioneSpaziatura, id=ID_Spaziatura)
+        self.Bind(wx.EVT_MENU, self.funzioneAllinea, id=ID_Allinea)
+        
+        # Bind Help
+        self.Bind(wx.EVT_MENU, self.funzioneInfo, id=ID_Info)
 
         return
 
