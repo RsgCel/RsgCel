@@ -321,10 +321,8 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneSelFont,id=wx.ID_SELECT_FONT)
 
         #Bind Foglio
-        self.Bind(wx.EVT_MENU, self.funzioneApriNuovoFoglio,id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU, self.funzionePulisciCelle,id=wx.ID_CLEAR)
         self.Bind(wx.EVT_MENU, self.funzioneRinomina,id=ID_Rinomina)
-        self.Bind(wx.EVT_MENU, self.funzioneCopia,id=wx.ID_COPY)
         
         #Bind Dati
         self.Bind(wx.EVT_MENU, self.funzioneOrdinaCresc,id=wx.ID_SORT_ASCENDING)
@@ -332,9 +330,6 @@ class Finestra(wx.Frame):
         
         #Bind Strumenti
         self.Bind(wx.EVT_MENU, self.funzioneCheckOrto,id=wx.ID_SPELL_CHECK)
-        
-        #Bind Finestra -> funzione apri già inserita in precedenza
-        self.Bind(wx.EVT_MENU, self.funzioneChiudi, id=wx.ID_CLOSE)
         
         # Bind Help
         self.Bind(wx.EVT_MENU, self.funzioneInfoLic, id=ID_InfoLic)
@@ -494,6 +489,10 @@ class Finestra(wx.Frame):
     
     # Funzioni File
     def funzioneNuovo(self, evt):
+        window = Finestra()
+        window.Show()
+        (px,py) = self.GetPosition()
+        window.Move(px + 50, py + 50)
         return
     
     def funzioneApri(self, evt):
@@ -503,6 +502,29 @@ class Finestra(wx.Frame):
         return
 
     def funzioneChiudi(self, evt):
+        if self.deviSalvare:
+            dial = wx.MessageDialog(None, "Vuoi salvare prima di chiudere il foglio di calcolo?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
+            risposta = dial.ShowModal()
+            if risposta == wx.ID_YES:
+                # salva
+                if not self.salva():
+                    return
+                # chiudi
+                self.Destroy()
+            
+            if risposta == wx.ID_NO:
+                #chiudi
+                self.Destroy()
+            
+            if risposta == wx.ID_CANCEL:
+                # nulla
+                return
+            
+        # se non devi salvare, chiudi e via
+        self.Destroy()
+        return
+
+    def funzioneRicarica(self, evt):
         return
 
     def funzioneRicarica(self, evt):
@@ -632,12 +654,6 @@ class Finestra(wx.Frame):
         return
     
     #Funzioni Foglio
-    def funzioneApriNuovoFoglio(self,evt):
-        window = Finestra()
-        window.Show()
-        (px,py) = self.GetPosition()
-        window.Move(px + 50, py + 50)
-        return
     def funzionePulisciCelle(self,evt):
         return
     def funzioneRinomina(self,evt):
@@ -654,11 +670,7 @@ class Finestra(wx.Frame):
     #Funzioni Strumenti
     def funzioneCheckOrto(self,evt):
         return
-    
-     #Funzioni Finestra
-    def funzioneChiudi(self,evt):
-        return
-    
+ 
     # Funzioni Aiuto
     def funzioneInfoLic(self, evt):
         return
