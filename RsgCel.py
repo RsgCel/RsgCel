@@ -41,6 +41,7 @@ ID_InfoRSG=30
 ID_Aiuto=31
 ID_Documentazione=32
 ID_Rinomina=33
+ID_Donazioni=34
 
 class Finestra(wx.Frame):
 
@@ -251,9 +252,9 @@ class Finestra(wx.Frame):
         mb.Append(windowMenu, '&Finestra')
         
         #Menù Aiuto
-        helpMenu = wx.Menu()
-        helpMenu.Append(ID_Documentazione, "Documentazione programma")      
+        helpMenu = wx.Menu()     
         helpMenu.Append(ID_Aiuto, "Guida")
+        helpMenu.Append(ID_Documentazione, "Documentazione programma") 
         helpMenu.AppendSeparator()
         helpMenu.Append(ID_Donazioni,"Donazione a RsgCel")
         helpMenu.AppendSeparator()
