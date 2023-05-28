@@ -409,11 +409,11 @@ class Finestra(wx.Frame):
             if not self.salva():
                 return
                 # chiudi
-            self.mainGrid.Clear()
+            self.mainGrid.ClearGrid()
                  
         if risposta == wx.ID_NO:
                 #chiudi
-            self.mainGrid.Clear()
+            self.mainGrid.ClearGrid()
         if risposta==wx.ID_CANCEL:
                 # nulla
             return
@@ -561,6 +561,7 @@ class Finestra(wx.Frame):
         return
     
     def funzioneStampa(self, evt):
+        self.mainGrid.Print()
         return
     
     def funzioneImpostazioniStampante(self, evt):
