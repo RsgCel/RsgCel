@@ -221,7 +221,7 @@ class Finestra(wx.Frame):
         
         #Menù foglio
         pageMenu=wx.Menu()
-        pageMenu.Append(wx.ID_OPEN,"Apri nuovo foglio di lavoro")
+        pageMenu.Append(wx.ID_NEW,"Apri nuovo foglio di lavoro")
         pageMenu.AppendSeparator()
         pageMenu.Append(wx.ID_CLEAR,"Pulisci celle")
         pageMenu.AppendSeparator()
@@ -246,7 +246,7 @@ class Finestra(wx.Frame):
         
         #Menù finestra
         windowMenu = wx.Menu()
-        windowMenu.Append(wx.ID_OPEN,"Apri nuova finestra")
+        windowMenu.Append(wx.ID_NEW,"Apri nuova finestra")
         windowMenu.Append(wx.ID_CLOSE,"Chiudi finestra")
         
         mb.Append(windowMenu, '&Finestra')
@@ -321,6 +321,7 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneSelFont,id=wx.ID_SELECT_FONT)
 
         #Bind Foglio
+        self.Bind(wx.EVT_MENU, self.funzioneApriNuovoFoglio,id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU, self.funzionePulisciCelle,id=wx.ID_CLEAR)
         self.Bind(wx.EVT_MENU, self.funzioneRinomina,id=ID_Rinomina)
         self.Bind(wx.EVT_MENU, self.funzioneCopia,id=wx.ID_COPY)
@@ -624,6 +625,12 @@ class Finestra(wx.Frame):
         return
     
     #Funzioni Foglio
+    def funzioneApriNuovoFoglio(self,evt):
+        window = Finestra()
+        window.Show()
+        (px,py) = self.GetPosition()
+        window.Move(px + 50, py + 50)
+        return
     def funzionePulisciCelle(self,evt):
         return
     def funzioneRinomina(self,evt):
