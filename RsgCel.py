@@ -342,6 +342,38 @@ class Finestra(wx.Frame):
 
     # in questa funzione andremo a creare e popolare la toolbar
     def creaToolbar(self):
+        toolbar = self.CreateToolBar()
+        
+        toolbar.AddTool(wx.ID_OPEN, "Nuovo",  wx.ArtProvider.GetBitmap(wx.ART_NEW))
+        toolbar.AddTool(wx.ID_OPEN, "Apri",  wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN))
+        toolbar.AddTool(wx.ID_SAVE, "Salva", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE))
+
+        toolbar.AddSeparator()
+
+        toolbar.AddTool(wx.ID_EXIT, "Stampa",  wx.ArtProvider.GetBitmap(wx.ART_PRINT))
+        
+        toolbar.AddSeparator()
+        
+        toolbar.AddTool(wx.ID_EXIT, "Taglia",  wx.ArtProvider.GetBitmap(wx.ART_CUT))
+        toolbar.AddTool(wx.ID_EXIT, "Copia",  wx.ArtProvider.GetBitmap(wx.ART_COPY))
+        toolbar.AddTool(wx.ID_EXIT, "Incolla",  wx.ArtProvider.GetBitmap(wx.ART_PASTE))
+        
+        toolbar.AddSeparator()
+        
+        toolbar.AddTool(wx.ID_EXIT, "Annulla",  wx.ArtProvider.GetBitmap(wx.ART_UNDO))
+        toolbar.AddTool(wx.ID_EXIT, "Ripristina",  wx.ArtProvider.GetBitmap(wx.ART_REDO))
+        
+        toolbar.AddSeparator()
+        
+        toolbar.AddTool(wx.ID_EXIT, "Trova e sostituisci",  wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE))
+        
+        toolbar.AddSeparator()
+        
+        self.digitazione = wx.TextCtrl(toolbar, size=(1075,-1))
+        toolbar.AddControl(self.digitazione)
+
+        toolbar.Realize()
+        
         return
 
     # in questa funzione aggiungeremo la statusbar
