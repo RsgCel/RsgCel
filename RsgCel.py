@@ -48,11 +48,11 @@ class Finestra(wx.Frame):
 
         # Spazio per le variabili membro della classe
         self.deviSalvare = False
-        self.celleModificate = {}
         self.addizione = {}
         self.moltiplicazione = {}
         self.sottrazione = {}
         self.divisione = {}
+        self.media = {}
 
         # -------------------------------------------
 
@@ -382,14 +382,31 @@ class Finestra(wx.Frame):
     def creaMainView(self):
         panel = wx.Panel(self)
         
-        mainLayout = wx.BoxSizer(wx.VERTICAL)
+        mainLayout = wx.BoxSizer(wx.HORIZONTAL)
+        
+        vbox1 = wx.BoxSizer(wx.VERTICAL)
         
         self.mainGrid = wx.grid.Grid(panel)
         self.mainGrid.CreateGrid(100, 100)
-        
         self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.cellaCambiata)
         
-        mainLayout.Add(self.mainGrid, proportion = 1, flag = wx.EXPAND)
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+        
+        indicatoreCelle = wx.ComboBox(panel, size = (150, -1))
+        btnFunction = wx.Button(panel, size = (23, 23))
+        btnFormula = wx.Button(panel, size = (23, 23))
+        barraCella = wx.TextCtrl(panel)
+        
+        hbox1.Add(indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(btnFunction, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(btnFormula, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
+        
+        vbox1.Add(hbox1, proportion = 0, flag = wx.EXPAND)
+        
+        vbox1.Add(self.mainGrid, proportion = 1, flag = wx.EXPAND)
+        
+        mainLayout.Add(vbox1, proportion = 1, flag = wx.EXPAND)
         
         panel.SetSizer(mainLayout)
         
@@ -456,6 +473,7 @@ class Finestra(wx.Frame):
         return
     
     def cellaCambiata(self, evt):
+#         self.deviSalvare = True
         #Qui andrebbero controllate se ci sono operazioni o se la cella cambiata può cambiare il valore di qualche altra
         return
     
@@ -486,32 +504,35 @@ class Finestra(wx.Frame):
     
     def cellDictFromFileString(self, stringa:str) -> dict:
         """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
-        dizionarioCelle = {}
-        for cella in stringa.split("\n"):
-            listaCella = cella.split(", ")
-            row = listaCella[0]
-            col = listaCella[1]
-            cont = listaCella[2] # Contenuto
-            tr = listaCella[3]   # TextRed
-            tg = listaCella[4]   # TextGreen
-            tb = listaCella[5]   # TextBlue
-            ta = listaCella[6]   # TextAlpha
-            r = listaCella[7]    # Red
-            g = listaCella[8]    # Green
-            b = listaCella[9]    #Blue
-            a = listaCella[10]   #Alpha
-            hAlign = listaCella[11]
-            vAlign = listaCella[12]
-            dizionarioCelle[(row, col)] = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
-        return dizionarioCelle
-    
+        if stringa != "vuoto":
+            dizionarioCelle = {}
+            for cella in stringa.split("\n"):
+                listaCella = cella.split(", ")
+                row = listaCella[0]
+                col = listaCella[1]
+                cont = listaCella[2] # Contenuto
+                tr = listaCella[3]   # TextRed
+                tg = listaCella[4]   # TextGreen
+                tb = listaCella[5]   # TextBlue
+                ta = listaCella[6]   # TextAlpha
+                r = listaCella[7]    # Red
+                g = listaCella[8]    # Green
+                b = listaCella[9]    #Blue
+                a = listaCella[10]   #Alpha
+                hAlign = listaCella[11]
+                vAlign = listaCella[12]
+                dizionarioCelle[(row, col)] = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
+            return dizionarioCelle
+
     # rc = rowCol
     def rcDictFromFileString(self, rcStringa:str) -> dict:
         """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
-        dizionario = {}
-        for rowCol in rcStringa.split("\n"):
-            listaRc = rowCol.split(", ")
-            dizionario[listaRc[0]] = lisraRc[1]
+        if rcStringa != "vuoto":
+            dizionario = {}
+            for rowCol in rcStringa.split("\n"):
+                listaRc = rowCol.split(", ")
+                dizionario[listaRc[0]] = lisraRc[1]
+        return dizionario
         
     def funzioneSalva(self, evt, stringaFile = ""): #Se gli passi il contenuto del file(di default "") puoi usarla anche per salva normale
         # Celle
@@ -571,15 +592,15 @@ class Finestra(wx.Frame):
             if height != baseHeight:
                 righeModificate[row] = str(height)
         
-        stringaFile += self.dictToString(celleModificate)
+        stringaFile += self.dictToString(celleModificate) or "vuoto"
         
         stringaFile += "Separatore\n"
         
-        stringaFile += self.dictToString(righeModificate)
+        stringaFile += self.dictToString(righeModificate) or "vuoto"
         
         stringaFile += "Separatore\n"
         
-        stringaFile += self.dictToString(colonneModificate)
+        stringaFile += self.dictToString(colonneModificate) or "vuoto"
         
         if EXTENSION in self.percorso:
             fileName = self.percorso
@@ -593,26 +614,30 @@ class Finestra(wx.Frame):
         return
     
     def funzioneApri(self,evt):
+        dlg = wx.FileDialog(None, "Apri File", style=wx.FD_OPEN, wildcard="RsgCel files (*.xlrsg)|*.xlrsg")
+        if dlg.ShowModal() == wx.ID_CANCEL:
+            return
+
+        filePath = dlg.GetPath()
+        
         if self.deviSalvare:
             window = Finestra()
             window.Show()
             (px,py) = self.GetPosition()
             window.Move(px + 50, py + 50)
            
-            window.apri()
+            window.apri(filePath)
             return
         
-        self.apri()
+        self.apri(filePath)
         return
     
-    def apri(self):
-        dlg = wx.FileDialog(None, "Apri File", style=wx.FD_OPEN)
-        if dlg.ShowModal() == wx.ID_CANCEL:
-            return
-
-        self.percorso = dlg.GetPath()
+    def apri(self, path):
+        self.percorso = path
         
         #DA RIVEDERE
+        
+        #PRIMA VANNO FATTE TUTTE LE OPERAZIONI
     
         file = open(self.percorso, "r")
         contenuto = file.read()
