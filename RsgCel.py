@@ -639,6 +639,22 @@ class Finestra(wx.Frame):
     #Funzioni Strumenti
     def funzioneCheckOrto(self,evt):
         return
+    
+     #Funzioni Finestra
+    def funzioneChiudi(self,evt):
+        return
+    
+    # Funzioni Aiuto
+    def funzioneInfoLic(self, evt):
+        return
+    def funzioneInfoRSG(self, evt):
+        return
+    def funzioneAiuto(self, evt):
+        return
+    def funzioneDocumentazione(self, evt):
+        return
+    def funzioneDonazione(self, evt):
+        return
 
 
 # ----------------------------------------
