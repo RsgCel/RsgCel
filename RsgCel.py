@@ -506,6 +506,7 @@ class Finestra(wx.Frame):
         return
 
     def funzioneRicarica(self, evt):
+        self.mainGrid.Refresh()
         return
 
     #def funzioneSalva(self, evt):
@@ -531,24 +532,30 @@ class Finestra(wx.Frame):
     
     # Funzioni Modifica
     def funzioneAnnulla(self, evt):
+        self.mainGrid.Undo()
         return
     
     def funzioneRipristina(self, evt):
+        self.mainGrid.Redo()
         return
 
     def funzioneRipeti(self, evt):
         return
 
     def funzioneTaglia(self, evt):
+        self.mainGrid.Cut()
         return
 
     def funzioneCopia(self, evt):
+        self.mainGrid.Copy()
         return
 
     def funzioneIncolla(self, evt):
+        self.mainGrid.Paste()
         return
 
     def funzioneSelezionaTutto(self, evt):
+        self.mainGrid.SelectAll()
         return
     
     def funzioneSeleziona(self, evt):
