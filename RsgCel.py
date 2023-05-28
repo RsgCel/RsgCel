@@ -439,8 +439,8 @@ class Finestra(wx.Frame):
     def funzioneRicarica(self, evt):
         return
 
-#     def funzioneSalva(self, evt):
-#         return
+    #def funzioneSalva(self, evt):
+    #    return
 
     def funzioneSalvaConNome(self, evt):
         return
@@ -457,8 +457,8 @@ class Finestra(wx.Frame):
     def funzioneProprietà(self, evt):
         return
     
-#     def funzioneEsci(self, evt):
-#         return
+    #def funzioneEsci(self, evt):
+    #    return
     
     # Funzioni Modifica
     def funzioneAnnulla(self, evt):
@@ -489,6 +489,70 @@ class Finestra(wx.Frame):
         return
     
     def funzioneTrovaeSostituisci(self, evt):
+        return
+    
+    # Funzioni Visualizza
+    def funzioneBarraFormula(self, evt):
+        return
+    
+    def funzioneBarraStato(self, evt):
+        return
+    
+    def funzioneBarLat(self, evt):
+        return
+        
+    def funzioneStili(self, evt):
+        return
+    
+    def funzioneGal(self, evt):
+        return
+        
+    def funzioneNav(self, evt):
+        return
+    
+    def funzioneListaFun(self, evt):
+        return
+    
+    def funzioneSorgenteDati(self, evt):
+        return
+    
+    def funzioneSchermoIntero(self, evt):
+        return
+    
+    def funzioneZoom(self, evt):
+        return
+    
+    # Funzione Inserisci
+    def funzioneImmagine(self, evt):
+        return
+    
+    def funzioneFunzione(self, evt):
+        return
+    
+    def funzioneCollegamento(self, evt):
+        return
+    
+    def funzioneCarattereSpeciale(self, evt):
+        return
+    
+    def funzioneData(self, evt):
+        return
+    
+    def funzioneOra(self, evt):
+        return
+    
+    # Funzioni Formato
+    def funzioneTesto(self, evt):
+        return
+    
+    def funzioneSpaziatura(self, evt):
+        return
+    
+    def funzioneAllinea(self, evt):
+        return
+    
+    # Funzioni Aiuto
+    def funzioneInfo(self, evt):
         return
 
 
