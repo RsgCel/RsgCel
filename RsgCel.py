@@ -5,9 +5,7 @@
 import wx, wx.grid
 
 APP_NAME = "RsgCel"
-
-BASE_WIDTH = 80
-BASE_HEIGHT = 19
+EXTENSION = ".xlrsg"
 
 ID_DOCRec = 1
 ID_SalvaNome = 2
@@ -111,7 +109,7 @@ class Finestra(wx.Frame):
         fileMenu.AppendSeparator()
         fileMenu.Append(wx.ID_SAVE, "Salva")
         fileMenu.Append(customItemSalvaNome)
-        fileMenu.Append(customItemDOCRec)
+        fileMenu.Append(customItemSalvaCopia)
         fileMenu.AppendSeparator()
         fileMenu.Append(wx.ID_PRINT, "Stampa")
         fileMenu.Append(customItemImpSta)
@@ -458,20 +456,11 @@ class Finestra(wx.Frame):
         return
     
     def cellaCambiata(self, evt):
-        row = evt.GetRow()
-        col = evt.GetCol()
-        
-        cont = self.mainGrid.GetCellValue(row, col)
-        (tr, tg, tb, ta) = self.mainGrid.GetCellTextColour(row, col).Get()
-        (r, g, b, a) = self.mainGrid.GetCellBackgroundColour(row, col).Get()
-        (hAlign, vAlign) = self.mainGrid.GetCellAlignment(row, col)
-        font = self.mainGrid.GetCellFont(row, col)
-        
-        self.celleModificate[(row, col)] = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
-        
+        #Qui andrebbero controllate se ci sono operazioni o se la cella cambiata può cambiare il valore di qualche altra
         return
     
-    def dictToString(self, dizionario):
+    def dictToString(self, dizionario:dict) -> str:
+        """Creo una stringa partendo dal dizionario fornito. Per ogni riga una lista poi trasnformata in stringa di chiavi e rispettivi valori"""
         stringa = ""
         for key in dizionario:
             lista = []
@@ -479,16 +468,50 @@ class Finestra(wx.Frame):
                 case tuple():
                     for coord in key:
                         lista.append(str(coord))
-                case str():
+                case str() | int():
                     lista.append(str(key))
                 case other:
                     pass
-            for value in dizionario[key]:
-                lista.append(str(value))
-            stringa += ", ".join(lista) + "\n"
+            
+            match dizionario[key]:
+                case list():
+                    for value in dizionario[key]:
+                        lista.append(str(value))
+                    stringa += ", ".join(lista) + "\n"
+                case str() | int():
+                    lista.append(dizionario[key])
+                    stringa += ", ".join(lista) + "\n"
         
         return stringa
-        
+    
+    def cellDictFromFileString(self, stringa:str) -> dict:
+        """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
+        dizionarioCelle = {}
+        for cella in stringa.split("\n"):
+            listaCella = cella.split(", ")
+            row = listaCella[0]
+            col = listaCella[1]
+            cont = listaCella[2] # Contenuto
+            tr = listaCella[3]   # TextRed
+            tg = listaCella[4]   # TextGreen
+            tb = listaCella[5]   # TextBlue
+            ta = listaCella[6]   # TextAlpha
+            r = listaCella[7]    # Red
+            g = listaCella[8]    # Green
+            b = listaCella[9]    #Blue
+            a = listaCella[10]   #Alpha
+            hAlign = listaCella[11]
+            vAlign = listaCella[12]
+            dizionarioCelle[(row, col)] = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
+        return dizionarioCelle
+    
+    # rc = rowCol
+    def rcDictFromFileString(self, rcStringa:str) -> dict:
+        """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
+        dizionario = {}
+        for rowCol in rcStringa.split("\n"):
+            listaRc = rowCol.split(", ")
+            dizionario[listaRc[0]] = lisraRc[1]
         
     def funzioneSalva(self, evt, stringaFile = ""): #Se gli passi il contenuto del file(di default "") puoi usarla anche per salva normale
         # Celle
@@ -500,31 +523,70 @@ class Finestra(wx.Frame):
         #      height
         
         # Quando salvi su un file già esistente controlla anche se la cella è già salvata da qualche parte
-        # Formato .esgs
+        # Formato .xlrsg
         dlg = wx.FileDialog(None, "Salva File", style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_CANCEL:
             return False
-
-        # la stringa che contiene il percorso della cartella selezionata
+        
         self.percorso = dlg.GetPath()
         
-        stringaFile += self.dictToString(self.celleModificate)
+        if stringaFile == "":
+            celleModificate = {}
+            righeModificate = {}
+            colonneModificate = {}
+        else:
+            listaStringaFile = stringaFile.split("Separatore\n")
+            celleModificate = self.cellDictFromFileString(listaStringaFile[0])
+            righeModificate = self.rcDictFromFileString(listaStringaFile[1])
+            colonneModificate = self.ecDictFromFileString(listaStringaFile[2])
+            
+        baseHeight = self.mainGrid.GetDefaultRowSize()
+        baseWidth = self.mainGrid.GetDefaultColSize()
+        baseCont = ""
+        (baseTr, baseTg, baseTb, baseTa) = self.mainGrid.GetDefaultCellTextColour()
+        (baseR, baseG, baseB, baseA) = self.mainGrid.GetDefaultCellBackgroundColour().Get()
+        (baseHAlign, baseVAlign) = self.mainGrid.GetDefaultCellAlignment()
+        
+        baseCell = [str(baseCont), str(baseTr), str(baseTg), str(baseTb), str(baseTa), str(baseR), str(baseG), str(baseB), str(baseA), str(baseHAlign), str(baseVAlign)]
+            
+        
+        for row in range(self.mainGrid.GetNumberRows()):
+            for col in range(self.mainGrid.GetNumberCols()):
+                cont = self.mainGrid.GetCellValue(row, col)
+                (tr, tg, tb, ta) = self.mainGrid.GetCellTextColour(row, col).Get()
+                (r, g, b, a) = self.mainGrid.GetCellBackgroundColour(row, col).Get()
+                (hAlign, vAlign) = self.mainGrid.GetCellAlignment(row, col)
+                font = self.mainGrid.GetCellFont(row, col)
+                
+                cell = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
+                
+                if cell != baseCell:
+                    celleModificate[(row, col)] = cell
+                
+                width = self.mainGrid.GetColSize(col)
+                if width != baseWidth:
+                    colonneModificate[col] = str(width)
+            
+            height = self.mainGrid.GetRowSize(row)
+            if height != baseHeight:
+                righeModificate[row] = str(height)
+        
+        stringaFile += self.dictToString(celleModificate)
         
         stringaFile += "Separatore\n"
-            
-        for a in range(100):
-            width = self.mainGrid.GetColSize(a)
-            if width != BASE_WIDTH:
-                stringaFile += str(a) + ", " + str(width) + "\n"
+        
+        stringaFile += self.dictToString(righeModificate)
         
         stringaFile += "Separatore\n"
-            
-        for a in range(100):
-            height = self.mainGrid.GetRowSize(a)
-            if height != BASE_HEIGHT:
-                stringaFile += str(a) + ", " + str(height)
         
-        file = open(self.percorso + ".xlrsg", "w")
+        stringaFile += self.dictToString(colonneModificate)
+        
+        if EXTENSION in self.percorso:
+            fileName = self.percorso
+        else:
+            fileName = self.percorso + EXTENSION
+        
+        file = open(fileName, "w")
         file.write(stringaFile)
         file.close()
         
@@ -548,7 +610,6 @@ class Finestra(wx.Frame):
         if dlg.ShowModal() == wx.ID_CANCEL:
             return
 
-        # la stringa che contiene il percorso della cartella selezionata
         self.percorso = dlg.GetPath()
         
         #DA RIVEDERE
