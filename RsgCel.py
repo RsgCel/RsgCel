@@ -530,7 +530,34 @@ class Finestra(wx.Frame):
         
         return
     
-    def funzioneApri(self, evt):
+    def funzioneApri(self,evt):
+        if self.deviSalvare:
+            window = Finestra()
+            window.Show()
+            (px,py) = self.GetPosition()
+            window.Move(px + 50, py + 50)
+           
+            window.apri()
+            return
+        
+        self.apri()
+        return
+    
+    def apri(self):
+        dlg = wx.FileDialog(None, "Apri File", style=wx.FD_OPEN)
+        if dlg.ShowModal() == wx.ID_CANCEL:
+            return
+
+        # la stringa che contiene il percorso della cartella selezionata
+        self.percorso = dlg.GetPath()
+        
+        #DA RIVEDERE
+    
+        file = open(self.percorso, "r")
+        contenuto = file.read()
+        file.close()
+        self.mainGrid.SetValue(contenuto)
+        self.deviSalvare = False
         return
 
     # Funzioni MenuBar
@@ -561,7 +588,6 @@ class Finestra(wx.Frame):
         return
     
     def funzioneStampa(self, evt):
-        self.mainGrid.Print()
         return
     
     def funzioneImpostazioniStampante(self, evt):
