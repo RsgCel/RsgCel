@@ -17,6 +17,26 @@ ID_Proprietà = 5
 ID_Ripeti = 6
 ID_Seleziona = 7
 ID_TrovaESos = 8
+ID_BarFor = 9
+ID_BarStato = 10
+ID_BarLat = 11
+ID_Stili = 12
+ID_Gal = 13
+ID_Nav = 14
+ID_ListaFun = 15
+ID_SorDati = 16
+ID_ScheInt = 17
+ID_Zoom = 18
+ID_Info = 19
+ID_Img = 20
+ID_Funzione = 21
+ID_Collegamento = 22
+ID_CarSpeciale = 23
+ID_Data = 24
+ID_Ora = 25
+ID_Testo = 26
+ID_Spaziatura = 27
+ID_Allinea = 28
 
 class Finestra(wx.Frame):
 
