@@ -27,7 +27,6 @@ ID_ListaFun = 15
 ID_SorDati = 16
 ID_ScheInt = 17
 ID_Zoom = 18
-ID_Info = 19
 ID_Img = 20
 ID_Funzione = 21
 ID_Collegamento = 22
@@ -37,6 +36,11 @@ ID_Ora = 25
 ID_Testo = 26
 ID_Spaziatura = 27
 ID_Allinea = 28
+ID_InfoLic=29
+ID_InfoRSG=30
+ID_Aiuto=31
+ID_Documentazione=32
+ID_Rinomina=33
 
 class Finestra(wx.Frame):
 
@@ -208,13 +212,54 @@ class Finestra(wx.Frame):
         
         mb.Append(formatoMenu, '&Formato')
         
-        # crea Menu Aiuto
+        #Menù stili -> ci si può mettere il font...
+        stileMenu=wx.Menu()
+        stileMenu.Append(wx.ID_SELECT_FONT,"Seleziona Font")
+        
+        mb.Append(stileMenu,"&Stile")
+        
+        #Menù foglio
+        pageMenu=wx.Menu()
+        pageMenu.Append(wx.ID_OPEN,"Apri nuovo foglio di lavoro")
+        pageMenu.AppendSeparator()
+        pageMenu.Append(wx.ID_CLEAR,"Pulisci celle")
+        pageMenu.AppendSeparator()
+        pageMenu.Append(ID_Rinomina,"Rinomina foglio")
+        pageMenu.AppendSeparator()
+        pageMenu.Append(wx.ID_COPY,"Copia foglio di lavoro")
+        
+        mb.Append(pageMenu, '&Foglio')
+        
+        #Menù dati
+        datiMenu=wx.Menu()
+        datiMenu.Append(wx.ID_SORT_ASCENDING,"Ordina in modo crescente")
+        datiMenu.Append(wx.ID_SORT_DESCENDING,"Ordina in modo decrescente")
+        
+        mb.Append(datiMenu, '&Dati')
+        
+        #Menù strumenti
+        strMenu=wx.Menu()
+        strMenu.Append(wx.ID_SPELL_CHECK,"Controllo ortografico")
+        
+        mb.Append(strMenu, '&Strumenti')
+        
+        #Menù finestra
+        windowMenu = wx.Menu()
+        windowMenu.Append(wx.ID_OPEN,"Apri nuova finestra")
+        windowMenu.Append(wx.ID_CLOSE,"Chiudi finestra")
+        
+        mb.Append(windowMenu, '&Finestra')
+        
+        #Menù Aiuto
         helpMenu = wx.Menu()
-        
-        # Creazione Item menu Aiuto
-        customItemInfo = wx.MenuItem(helpMenu, 19, "Informazioni su RsgCel")
-        
-        helpMenu.Append(customItemInfo)
+        helpMenu.Append(ID_Documentazione, "Documentazione programma")      
+        helpMenu.Append(ID_Aiuto, "Guida")
+        helpMenu.AppendSeparator()
+        helpMenu.Append(ID_Donazioni,"Donazione a RsgCel")
+        helpMenu.AppendSeparator()
+        helpMenu.Append(ID_InfoLic, "Informazioni licenza")
+        helpMenu.AppendSeparator()
+        helpMenu.Append(ID_InfoRSG, "Informazioni su RsgCel")
         
         mb.Append(helpMenu, '&Aiuto')
         
@@ -271,8 +316,29 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneSpaziatura, id=ID_Spaziatura)
         self.Bind(wx.EVT_MENU, self.funzioneAllinea, id=ID_Allinea)
         
+        #Bind Stili
+        self.Bind(wx.EVT_MENU, self.funzioneSelFont,id=wx.ID_SELECT_FONT)
+
+        #Bind Foglio
+        self.Bind(wx.EVT_MENU, self.funzionePulisciCelle,id=wx.ID_CLEAR)
+        self.Bind(wx.EVT_MENU, self.funzioneRinomina,id=ID_Rinomina)
+        self.Bind(wx.EVT_MENU, self.funzioneCopia,id=wx.ID_COPY)
+        #Bind Dati
+        self.Bind(wx.EVT_MENU, self.funzioneOrdinaCresc,id=wx.ID_SORT_ASCENDING)
+        self.Bind(wx.EVT_MENU, self.funzioneOrdinaDecr,id=wx.ID_SORT_DESCENDING)
+        
+        #Bind Strumenti
+        self.Bind(wx.EVT_MENU, self.funzioneCheckOrto,id=wx.ID_SPELL_CHECK)
+        
+        #Bind Finestra -> funzione apri già inserita in precedenza
+        self.Bind(wx.EVT_MENU, self.funzioneInfoLic, id=wx.ID_CLOSE)
+        
         # Bind Help
-        self.Bind(wx.EVT_MENU, self.funzioneInfo, id=ID_Info)
+        self.Bind(wx.EVT_MENU, self.funzioneInfoLic, id=ID_InfoLic)
+        self.Bind(wx.EVT_MENU, self.funzioneInfoRSG, id=ID_InfoRSG)
+        self.Bind(wx.EVT_MENU, self.funzioneAiuto, id=ID_Aiuto)
+        self.Bind(wx.EVT_MENU, self.funzioneAiuto, id=ID_Documentazione)
+        self.Bind(wx.EVT_MENU, self.funzioneAiuto, id=ID_Donazioni)
 
         return
 
