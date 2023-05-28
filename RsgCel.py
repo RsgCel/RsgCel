@@ -323,6 +323,7 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzionePulisciCelle,id=wx.ID_CLEAR)
         self.Bind(wx.EVT_MENU, self.funzioneRinomina,id=ID_Rinomina)
         self.Bind(wx.EVT_MENU, self.funzioneCopia,id=wx.ID_COPY)
+        
         #Bind Dati
         self.Bind(wx.EVT_MENU, self.funzioneOrdinaCresc,id=wx.ID_SORT_ASCENDING)
         self.Bind(wx.EVT_MENU, self.funzioneOrdinaDecr,id=wx.ID_SORT_DESCENDING)
@@ -331,14 +332,14 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneCheckOrto,id=wx.ID_SPELL_CHECK)
         
         #Bind Finestra -> funzione apri già inserita in precedenza
-        self.Bind(wx.EVT_MENU, self.funzioneInfoLic, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.funzioneChiudi, id=wx.ID_CLOSE)
         
         # Bind Help
         self.Bind(wx.EVT_MENU, self.funzioneInfoLic, id=ID_InfoLic)
         self.Bind(wx.EVT_MENU, self.funzioneInfoRSG, id=ID_InfoRSG)
         self.Bind(wx.EVT_MENU, self.funzioneAiuto, id=ID_Aiuto)
-        self.Bind(wx.EVT_MENU, self.funzioneAiuto, id=ID_Documentazione)
-        self.Bind(wx.EVT_MENU, self.funzioneAiuto, id=ID_Donazioni)
+        self.Bind(wx.EVT_MENU, self.funzioneDocumentazione, id=ID_Documentazione)
+        self.Bind(wx.EVT_MENU, self.funzioneDonazione, id=ID_Donazioni)
 
         return
 
@@ -617,8 +618,26 @@ class Finestra(wx.Frame):
     def funzioneAllinea(self, evt):
         return
     
-    # Funzioni Aiuto
-    def funzioneInfo(self, evt):
+    #Funzioni Stili
+    def funzioneSelFont(self,evt):
+        return
+    
+    #Funzioni Foglio
+    def funzionePulisciCelle(self,evt):
+        return
+    def funzioneRinomina(self,evt):
+        return
+    def funzioneCopia(self,evt):
+        return
+    
+    #Funzioni Dati
+    def funzioneOrdinaCresc(self,evt):
+        return
+    def funzioneOrdinaDecr(self,evt):
+        return
+    
+    #Funzioni Strumenti
+    def funzioneCheckOrto(self,evt):
         return
 
 
