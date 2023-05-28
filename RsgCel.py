@@ -401,9 +401,25 @@ class Finestra(wx.Frame):
         self.SetIcon(icon)
         
         return
-    
-    def funzioneEsci(self,evt):
-        #PRIMA salvo le impostazioni... male non fa!!
+    def funzioneChiudi(self,evt): #CLEAR NON FUNZIONA DA RIVEDERE
+        dial = wx.MessageDialog(None, "Vuoi salvare prima di chiudere il foglio di calcolo?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
+        risposta = dial.ShowModal()
+        if risposta == wx.ID_YES:
+            # salva
+            if not self.salva():
+                return
+                # chiudi
+            self.mainGrid.Clear()
+                 
+        if risposta == wx.ID_NO:
+                #chiudi
+            self.mainGrid.Clear()
+        if risposta==wx.ID_CANCEL:
+                # nulla
+            return
+        self.deviSalvare = False
+        return
+    def funzioneEsci(self,evt): #NON FUNZIONA
         config = wx.FileConfig(APP_NAME)
         
         if self.IsMaximized():
@@ -419,7 +435,7 @@ class Finestra(wx.Frame):
         config.Write( "py" , str(py) )
 
         if self.deviSalvare:
-            dial = wx.MessageDialog(None, "Vuoi salvare prima di chiudere?", "Paraculo", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
+            dial = wx.MessageDialog(None, "Vuoi salvare prima di chiudere?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
             risposta = dial.ShowModal()
             
             match risposta:
@@ -526,34 +542,8 @@ class Finestra(wx.Frame):
         (px,py) = self.GetPosition()
         window.Move(px + 50, py + 50)
         return
-    
-    def funzioneApri(self, evt):
-        return
 
     def funzioneDocumentiRecenti(self, evt):
-        return
-
-    def funzioneChiudi(self, evt):
-        if self.deviSalvare:
-            dial = wx.MessageDialog(None, "Vuoi salvare prima di chiudere il foglio di calcolo?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
-            risposta = dial.ShowModal()
-            if risposta == wx.ID_YES:
-                # salva
-                if not self.salva():
-                    return
-                # chiudi
-                self.Destroy()
-            
-            if risposta == wx.ID_NO:
-                #chiudi
-                self.Destroy()
-            
-            if risposta == wx.ID_CANCEL:
-                # nulla
-                return
-            
-        # se non devi salvare, chiudi e via
-        self.Destroy()
         return
 
     def funzioneRicarica(self, evt):
@@ -563,8 +553,6 @@ class Finestra(wx.Frame):
         self.mainGrid.Refresh()
         return
 
-    #def funzioneSalva(self, evt):
-    #    return
 
     def funzioneSalvaConNome(self, evt):
         return
@@ -580,9 +568,7 @@ class Finestra(wx.Frame):
     
     def funzioneProprietà(self, evt):
         return
-    
-    #def funzioneEsci(self, evt):
-    #    return
+   
     
     # Funzioni Modifica
     def funzioneAnnulla(self, evt):
@@ -690,8 +676,7 @@ class Finestra(wx.Frame):
         return
     def funzioneRinomina(self,evt):
         return
-    def funzioneCopia(self,evt):
-        return
+    
     
     #Funzioni Dati
     def funzioneOrdinaCresc(self,evt):
