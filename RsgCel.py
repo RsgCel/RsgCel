@@ -136,7 +136,10 @@ class Finestra(wx.Frame):
         customItemSele = wx.MenuItem(editMenu, ID_Seleziona, "Seleziona")
         customItemTrovaESos = wx.MenuItem(editMenu, ID_TrovaESos, "Trova e sostituisci")
 
-        editMenu.Append(wx.ID_UNDO, "Annulla")
+
+        annullaItem = wx.MenuItem(fileMenu,wx.ID_UNDO,"Annulla")
+        annullaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_UNDO))
+        fileMenu.Append(annullaItem)
         editMenu.Append(wx.ID_REDO, "Ripristina")
         editMenu.Append(customItemRipeti)
         editMenu.AppendSeparator()
