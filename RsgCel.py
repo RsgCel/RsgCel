@@ -48,7 +48,7 @@ class Finestra(wx.Frame):
 
         # Spazio per le variabili membro della classe
         self.deviSalvare = False
-        self.addizione = {}
+        self.somma = {}
         self.moltiplicazione = {}
         self.sottrazione = {}
         self.divisione = {}
@@ -487,9 +487,227 @@ class Finestra(wx.Frame):
         self.Destroy()
         return
     
+    def alfanumericToNumberCellCoord(self, stringa:str) -> tuple:
+        for a in stringa:
+            if a.isnumeric():
+                tupla = stringa.partition(a)
+                break
+        col = tupla[0]
+        
+        for a in range(self.mainGrid.GetNumberCols()):
+            if self.mainGrid.GetColLabelValue(a) == col:
+                colNumber = a
+                break
+        
+        rowNumber = tupla[1] + tupla[2]
+        return (int(rowNumber) - 1, int(colNumber))
+    
+    def calcoloSomma(self, cellCoordsList:list) -> str:
+        listaValori = []
+        for a in cellCoordsList:
+            listaValori.append(self.mainGrid.GetCellValue(a[0], a[1]))
+        
+        for a in listaValori:
+            if not a.isnumeric():
+                stringa = True
+                break
+        else:
+            stringa = False
+        
+        if stringa:
+            somma = ""
+            for a in listaValori:
+                somma += a
+        else:
+            somma = 0
+            for a in listaValori:
+                somma += float(a)
+            if int(somma) == somma:
+                somma = int(somma)
+        return str(somma)
+    
+    def calcoloSottrazione(self, cellCoordsList:list) -> str:
+        listaValori = []
+        for a in cellCoordsList:
+            listaValori.append(self.mainGrid.GetCellValue(a[0], a[1]))
+        
+        for a in listaValori:
+            if not a.isnumeric():
+                return "ERROR"
+        
+        listaValoriFloat = []
+        for a in listaValori:
+            listaValoriFloat.append(float(a))
+        
+        sottrazione = listaValoriFloat.pop(0)
+        for a in listaValoriFloat:
+            sottrazione -= a
+        
+        if int(sottrazione) == sottrazione:
+                sottrazione = int(sottrazione)
+        
+        return str(sottrazione)
+    
+    def calcoloMoltiplicazione(self, cellCoordsList:list) -> str:
+        listaValori = []
+        
+        for a in cellCoordsList:
+            listaValori.append(self.mainGrid.GetCellValue(a[0], a[1]))
+        
+        listaValoriNumerici = []
+        stringa = ""
+        for a in listaValori:
+            if a.isnumeric():
+                listaValoriNumerici.append(float(a))
+            else:
+                if len(stringa) == 0:
+                    stringa = a
+                else:
+                    return "ERROR"
+        
+        moltiplicazione = 1
+        for a in listaValoriNumerici:
+            moltiplicazione *= a
+        
+        if int(moltiplicazione) == moltiplicazione:
+            moltiplicazione = int(moltiplicazione)
+        else:
+            return "ERROR"
+        
+        if len(stringa) != 0:
+            return str(stringa * moltiplicazione)
+        return str(moltiplicazione)
+    
+    def calcoloDivisione(self, cellCoordsList:list) -> str:
+        listaValori = []
+        for a in cellCoordsList:
+            listaValori.append(self.mainGrid.GetCellValue(a[0], a[1]))
+        
+        for a in listaValori:
+            if not a.isnumeric():
+                return "ERROR"
+        
+        listaValoriFloat = []
+        for a in listaValori:
+            listaValoriFloat.append(float(a))
+        
+        divisione = listaValoriFloat.pop(0)
+        for a in listaValoriFloat:
+            divisione /= a
+        
+        if int(divisione) == divisione:
+                divisione = int(divisione)
+        
+        return str(divisione)
+    
+    def calcoloMedia(self, cellCoordsList:list) -> str:
+        media = float(self.calcoloSomma(cellCoordsList)) / len(cellCoordsList)
+        if int(media) == media:
+            return str(int(media))
+        return str(media)
+    
+    def alfanumericCellsListToCoordCellList(self, listaCelle:list) -> list:
+        listaCoordsCelle = []
+        for a in listaCelle:
+            listaCoordsCelle.append(self.alfanumericToNumberCellCoord(a))
+        return listaCoordsCelle
+    
     def cellaCambiata(self, evt):
 #         self.deviSalvare = True
         #Qui andrebbero controllate se ci sono operazioni o se la cella cambiata può cambiare il valore di qualche altra
+        row = evt.GetRow()
+        col = evt.GetCol()
+        cont = self.mainGrid.GetCellValue(row, col)
+        if "=" in cont:
+            self.operazioni(row, col)
+        self.cellaOperazione(row, col)
+    
+    def cellaOperazione(self, row:int, col:int) -> None:
+        cella = (row, col)
+        for a in self.somma:
+            for b in self.somma[a]:
+                if b == cella:
+                    self.operazioni(a[0], a[1], main = False, op = "+")
+        
+        for a in self.sottrazione:
+            for b in self.sottrazione[a]:
+                if b == cella:
+                    self.operazioni(a[0], a[1], main = False, op = "-")
+        
+        for a in self.moltiplicazione:
+            for b in self.moltiplicazione[a]:
+                if b == cella:
+                    self.operazioni(a[0], a[1], main = False, op = "*")
+        
+        for a in self.divisione:
+            for b in self.divisione[a]:
+                if b == cella:
+                    self.operazioni(a[0], a[1], main = False, op = "/")
+        
+        for a in self.media:
+            for b in self.media[a]:
+                if b == cella:
+                    self.operazioni(a[0], a[1], main = False, op = "MEDIA")
+            
+    def operazioni(self, row:int, col:int, main = True, op = "") -> None:
+        cont = self.mainGrid.GetCellValue(row, col)
+        cont = cont.replace("=", "")
+        cont = cont.replace(" ", "")
+        if "+" in cont or "+" in op:
+            if main:
+                listaCelle = cont.split("+")
+                listaCoordCelle = self.alfanumericCellsListToCoordCellList(listaCelle)
+                self.somma[(row, col)] = listaCoordCelle
+            else:
+                listaCoordCelle = self.somma[(row, col)]
+                
+            print(listaCoordCelle)
+            
+            output = self.calcoloSomma(listaCoordCelle)
+            
+        elif "-" in cont or "-" in op:
+            if main:
+                listaCelle = cont.split("-")
+                listaCoordCelle = self.alfanumericCellsListToCoordCellList(listaCelle)
+                self.sottrazione[(row, col)] = listaCoordCelle
+            else:
+                listaCoordCelle = self.sottrazione[(row, col)]
+            
+            output = self.calcoloSottrazione(listaCoordCelle)
+            
+        elif "*" in cont or "*" in op:
+            if main:
+                listaCelle = cont.split("*")
+                listaCoordCelle = self.alfanumericCellsListToCoordCellList(listaCelle)
+                self.moltiplicazione[(row, col)] = listaCoordCelle
+            else:
+                listaCoordCelle = self.moltiplicazione[(row, col)]
+            
+            output = self.calcoloMoltiplicazione(listaCoordCelle)
+        
+        elif "/" in cont or "/" in op:
+            if main:
+                listaCelle = cont.split("/")
+                listaCoordCelle = self.alfanumericCellsListToCoordCellList(listaCelle)
+                self.divisione[(row, col)] = listaCoordCelle
+            else:
+                listaCoordCelle = self.divisione[(row, col)]
+            
+            output = self.calcoloDivisione(listaCoordCelle)
+            
+        elif "MEDIA" in cont or "MEDIA" in op:
+            if main:
+                cont = cont.replace(")", "")
+                cont = cont.replace("MEDIA(", "")
+                listaCelle = cont.split(";")
+                listaCoordCelle = self.alfanumericCellsListToCoordCellList(listaCelle)
+                self.media[(row, col)] = listaCoordCelle
+            else:
+                listaCoordCelle = self.media[(row, col)]
+            
+            output = self.calcoloMedia(listaCoordCelle)
+            
+        self.mainGrid.SetCellValue(row, col, output)
         return
     
     def dictToString(self, dizionario:dict) -> str:
@@ -517,12 +735,30 @@ class Finestra(wx.Frame):
         
         return stringa
     
+    def creaContenutoOperazione(self, cellCoordsList, segno):
+        listaCelle = []
+        for a in cellCoordsList:
+            row = a[0]
+            col = a[1]
+            colLabel = self.mainGrid.GetColLabelValue(col)
+            listaCelle.append(str(colLabel) + str(row + 1))
+        if segno != "MEDIA":
+            cont = "=" + segno.join(listaCelle)
+        else:
+            cont = "=MEDIA(" + ";".join(listaCelle) + ")"
+        return cont
+                
+    
     def cellDictFromFileString(self, stringa:str) -> dict:
         """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
         if stringa != "vuoto":
             dizionarioCelle = {}
-            for cella in stringa.split("\n"):
+            listaCelle = stringa.split("\n")
+            if listaCelle[-1] == "":
+                listaCelle.pop(-1)
+            for cella in listaCelle:
                 listaCella = cella.split(", ")
+                print(listaCella)
                 row = listaCella[0]
                 col = listaCella[1]
                 cont = listaCella[2] # Contenuto
@@ -536,6 +772,7 @@ class Finestra(wx.Frame):
                 a = listaCella[10]   #Alpha
                 hAlign = listaCella[11]
                 vAlign = listaCella[12]
+                
                 dizionarioCelle[(row, col)] = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
             return dizionarioCelle
 
@@ -589,6 +826,33 @@ class Finestra(wx.Frame):
         for row in range(self.mainGrid.GetNumberRows()):
             for col in range(self.mainGrid.GetNumberCols()):
                 cont = self.mainGrid.GetCellValue(row, col)
+                
+                cella = (row, col)
+                for a in self.somma:
+                    if a == cella:
+                        cont = self.creaContenutoOperazione(self.somma[a], "+")
+                        break
+                
+                for a in self.sottrazione:
+                    if a == cella:
+                        cont = self.creaContenutoOperazione(self.sottrazione[a], "-")
+                        break
+                
+                for a in self.divisione:
+                    if a == cella:
+                        cont = self.creaContenutoOperazione(self.divisione[a], "/")
+                        break
+                
+                for a in self.moltiplicazione:
+                    if a == cella:
+                        cont = self.creaContenutoOperazione(self.moltiplicazione[a], "*")
+                        break
+                
+                for a in self.media:
+                    if a == cella:
+                        cont = self.creaContenutoOperazione(self.media[a], "MEDIA")
+                        break
+                
                 (tr, tg, tb, ta) = self.mainGrid.GetCellTextColour(row, col).Get()
                 (r, g, b, a) = self.mainGrid.GetCellBackgroundColour(row, col).Get()
                 (hAlign, vAlign) = self.mainGrid.GetCellAlignment(row, col)
@@ -607,15 +871,15 @@ class Finestra(wx.Frame):
             if height != baseHeight:
                 righeModificate[row] = str(height)
         
-        stringaFile += self.dictToString(celleModificate) or "vuoto"
+        stringaFile += self.dictToString(celleModificate) or "vuoto\n"
         
         stringaFile += "Separatore\n"
         
-        stringaFile += self.dictToString(righeModificate) or "vuoto"
+        stringaFile += self.dictToString(righeModificate) or "vuoto\n"
         
         stringaFile += "Separatore\n"
         
-        stringaFile += self.dictToString(colonneModificate) or "vuoto"
+        stringaFile += self.dictToString(colonneModificate) or "vuoto\n"
         
         if EXTENSION in self.percorso:
             fileName = self.percorso
@@ -625,6 +889,10 @@ class Finestra(wx.Frame):
         file = open(fileName, "w")
         file.write(stringaFile)
         file.close()
+        
+        self.deviSalvare = False
+        
+        print("SALVATAGGIO COMPLETATO")
         
         return
     
@@ -649,15 +917,50 @@ class Finestra(wx.Frame):
     
     def apri(self, path):
         self.percorso = path
-        
-        #DA RIVEDERE
-        
-        #PRIMA VANNO FATTE TUTTE LE OPERAZIONI
     
         file = open(self.percorso, "r")
         contenuto = file.read()
         file.close()
-        self.mainGrid.SetValue(contenuto)
+        
+        [celle, righe, colonne] = contenuto.split("Separatore\n")
+        
+        dizionarioCelle = self.cellDictFromFileString(celle)
+        
+        for cella in dizionarioCelle:
+            row = int(cella[0])
+            col = int(cella[1])
+            cont = dizionarioCelle[cella][0]
+            tr = int(dizionarioCelle[cella][1])
+            tg = int(dizionarioCelle[cella][2])
+            tb = int(dizionarioCelle[cella][3])
+            ta = int(dizionarioCelle[cella][4])
+            r = int(dizionarioCelle[cella][5])
+            g = int(dizionarioCelle[cella][6])
+            b = int(dizionarioCelle[cella][7])
+            a = int(dizionarioCelle[cella][8])
+            hAlign = int(dizionarioCelle[cella][9])
+            vAlign = int(dizionarioCelle[cella][10])
+             
+            alignment = (hAlign, vAlign)
+            
+            self.mainGrid.SetCellValue(row, col, cont)
+            self.mainGrid.SetCellTextColour(row, col, wx.Colour(tr, tg, tb, ta))
+            self.mainGrid.SetCellBackgroundColour(row, col, wx.Colour(r, g, b, a))
+            self.mainGrid.SetCellAlignment(row, col, hAlign, vAlign)
+            
+        for cella in dizionarioCelle:
+            cont = dizionarioCelle[cella][0]
+            if "=" in cont:
+                row = int(cella[0])
+                col = int(cella[1])
+                self.operazioni(row, col)
+            
+            
+        
+        #DA RIVEDERE
+        
+        #PRIMA VANNO FATTE TUTTE LE OPERAZIONI
+        
         self.deviSalvare = False
         return
 
