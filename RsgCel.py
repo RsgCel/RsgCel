@@ -660,8 +660,6 @@ class Finestra(wx.Frame):
                 self.somma[(row, col)] = listaCoordCelle
             else:
                 listaCoordCelle = self.somma[(row, col)]
-                
-            print(listaCoordCelle)
             
             output = self.calcoloSomma(listaCoordCelle)
             
@@ -758,7 +756,6 @@ class Finestra(wx.Frame):
                 listaCelle.pop(-1)
             for cella in listaCelle:
                 listaCella = cella.split(", ")
-                print(listaCella)
                 row = listaCella[0]
                 col = listaCella[1]
                 cont = listaCella[2] # Contenuto
