@@ -674,6 +674,7 @@ class Finestra(wx.Frame):
         return
     
     def funzioneStampa(self, evt):
+        #PrintGrid()
         return
     
     def funzioneImpostazioniStampante(self, evt):
