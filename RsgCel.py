@@ -1106,6 +1106,8 @@ class Finestra(wx.Frame):
         return
     
     def funzioneData(self, evt):
+        #now = wx.DateTime.Now()
+        #date = now.FormatDate()
         return
     
     def funzioneOra(self, evt):
