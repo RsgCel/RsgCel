@@ -111,7 +111,12 @@ class Finestra(wx.Frame):
         closeItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_CLOSE))
         fileMenu.Append(closeItem)
         fileMenu.AppendSeparator()
-        fileMenu.Append(wx.ID_REFRESH, "Ricarica")
+        oggettoImg = wx.Bitmap("ricarica.png")
+        ricarica = oggettoImg.ConvertToImage()
+        ricarica.Rescale(27,27)
+        ricaricaItem = wx.MenuItem(fileMenu, wx.ID_REFRESH,"Ricarica")
+        ricaricaItem.SetBitmap(ricarica)
+        fileMenu.Append(ricaricaItem)
         fileMenu.AppendSeparator()
         salvaItem = wx.MenuItem(fileMenu,wx.ID_SAVE,"Salva")
         salvaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE))
@@ -119,12 +124,16 @@ class Finestra(wx.Frame):
         fileMenu.Append(customItemSalvaNome)
         fileMenu.Append(customItemSalvaCopia)
         fileMenu.AppendSeparator()
-        fileMenu.Append(wx.ID_PRINT, "Stampa")
+        stampaItem = wx.MenuItem(fileMenu, wx.ID_PRINT,"Stampa")
+        stampaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_PRINT))
+        fileMenu.Append(stampaItem)
         fileMenu.Append(customItemImpSta)
         fileMenu.AppendSeparator()
         fileMenu.Append(customItemProprietà)
         fileMenu.AppendSeparator()
-        fileMenu.Append(wx.ID_EXIT, "Esci da GS Excel")
+        esciItem = wx.MenuItem(fileMenu, wx.ID_EXIT,"Esci da GS Excel")
+        esciItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_QUIT))
+        fileMenu.Append(esciItem)
         
         mb.Append(fileMenu, '&File')
         
@@ -140,7 +149,9 @@ class Finestra(wx.Frame):
         annullaItem = wx.MenuItem(fileMenu,wx.ID_UNDO,"Annulla")
         annullaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_UNDO))
         fileMenu.Append(annullaItem)
-        editMenu.Append(wx.ID_REDO, "Ripristina")
+        ripristinaItem = wx.MenuItem(editMenu,wx.ID_REDO, "Ripristina")
+        ripristinaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_REDO))
+        editMenu.Append(ripristinaItem)
         editMenu.Append(customItemRipeti)
         editMenu.AppendSeparator()
         tagliaItem = wx.MenuItem(fileMenu, wx.ID_CUT,"Taglia")
@@ -149,12 +160,19 @@ class Finestra(wx.Frame):
         copiaItem = wx.MenuItem(fileMenu, wx.ID_COPY,"Copia")
         copiaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_COPY))
         fileMenu.Append(copiaItem)
-        editMenu.Append(wx.ID_PASTE, "Incolla")
+        incollaItem = wx.MenuItem(editMenu,wx.ID_PASTE, "Incolla")
+        incollaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_PASTE))
+        editMenu.Append(incollaItem)
         editMenu.AppendSeparator()
         editMenu.Append(wx.ID_SELECTALL, "Seleziona tutto")
         editMenu.Append(customItemSele)
         editMenu.AppendSeparator()
-        editMenu.Append(wx.ID_FIND, "Trova")
+        oggettoImg = wx.Bitmap("trova.png")
+        trova = oggettoImg.ConvertToImage()
+        trova.Rescale(27,27)
+        TrovaItem = wx.MenuItem(editMenu, wx.ID_FIND, "Trova")
+        TrovaItem.SetBitmap(trova)
+        editMenu.Append(TrovaItem)
         editMenu.Append(customItemTrovaESos)
         
         mb.Append(editMenu, '&Modifica')
@@ -179,6 +197,11 @@ class Finestra(wx.Frame):
         viewMenu.AppendSeparator()
         viewMenu.Append(customItemBarraLat)
         viewMenu.Append(customItemStili)
+        oggettoImmagine = wx.Bitmap("galleria.png")
+        immagine = oggettoImmagine.ConvertToImage()
+        immagine.Rescale(30, 30)
+        customItemGalleria = wx.MenuItem(viewMenu, ID_Gal, "Galleria")
+        customItemGalleria.SetBitmap(immagine)
         viewMenu.Append(customItemGalleria)
         viewMenu.Append(customItemNavigatore)
         viewMenu.Append(customItemListaFunzioni)
@@ -208,7 +231,12 @@ class Finestra(wx.Frame):
         insertMenu.Append(customItemCarattereSpeciale)
         insertMenu.AppendSeparator()
         insertMenu.Append(customItemData)
-        insertMenu.Append(customItemOra)
+        oggettoImg = wx.Bitmap("ora.png")
+        ora = oggettoImg.ConvertToImage()
+        ora.Rescale(27,27)
+        OraItem = wx.MenuItem(insertMenu, ID_Ora, "Ora")
+        OraItem.SetBitmap(ora)
+        insertMenu.Append(OraItem)
         
         mb.Append(insertMenu, '&Inserisci')
         
@@ -972,9 +1000,6 @@ class Finestra(wx.Frame):
         return
 
     def funzioneDocumentiRecenti(self, evt):
-        return
-
-    def funzioneRicarica(self, evt):
         return
 
     def funzioneRicarica(self, evt):
