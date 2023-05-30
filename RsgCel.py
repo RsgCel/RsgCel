@@ -432,18 +432,23 @@ class Finestra(wx.Frame):
         self.mainGrid = wx.grid.Grid(panel)
         self.mainGrid.CreateGrid(100, 100)
         self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.cellaCambiata)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_LEFT_CLICK, self.cellaInCambiamento)
         
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         
-        indicatoreCelle = wx.ComboBox(panel, size = (150, -1))
-        btnFunction = wx.Button(panel, size = (23, 23))
-        btnFormula = wx.Button(panel, size = (23, 23))
-        barraCella = wx.TextCtrl(panel)
+        self.indicatoreCelle = wx.ComboBox(panel, size = (150, -1), value = "A1", choices = [""], style =  wx.TE_PROCESS_ENTER)
+        self.btnFunction = wx.Button(panel, size = (23, 23))
+        self.btnFormula = wx.Button(panel, size = (23, 23))
+        self.barraCella = wx.TextCtrl(panel)
         
-        hbox1.Add(indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(btnFunction, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(btnFormula, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
+        
+        self.indicatoreCelle.Bind(wx.EVT_COMBOBOX, self.rimettiValore)
+        self.indicatoreCelle.Bind(wx.EVT_TEXT_ENTER, self.aggiornaPos)
+        
+        hbox1.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(self.btnFunction, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(self.btnFormula, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
         
         vbox1.Add(hbox1, proportion = 0, flag = wx.EXPAND)
         
@@ -514,21 +519,6 @@ class Finestra(wx.Frame):
                 
         self.Destroy()
         return
-    
-    def alfanumericToNumberCellCoord(self, stringa:str) -> tuple:
-        for a in stringa:
-            if a.isnumeric():
-                tupla = stringa.partition(a)
-                break
-        col = tupla[0]
-        
-        for a in range(self.mainGrid.GetNumberCols()):
-            if self.mainGrid.GetColLabelValue(a) == col:
-                colNumber = a
-                break
-        
-        rowNumber = tupla[1] + tupla[2]
-        return (int(rowNumber) - 1, int(colNumber))
     
     def calcoloSomma(self, cellCoordsList:list) -> str:
         listaValori = []
@@ -640,6 +630,46 @@ class Finestra(wx.Frame):
             listaCoordsCelle.append(self.alfanumericToNumberCellCoord(a))
         return listaCoordsCelle
     
+    def alfanumericToNumberCellCoord(self, stringa:str) -> tuple:
+        for a in stringa:
+            if a.isnumeric():
+                tupla = stringa.partition(a)
+                break
+        col = tupla[0]
+        
+        for a in range(self.mainGrid.GetNumberCols()):
+            if self.mainGrid.GetColLabelValue(a) == col:
+                colNumber = a
+                break
+        
+        rowNumber = tupla[1] + tupla[2]
+        return (int(rowNumber) - 1, int(colNumber))
+    
+    def rimettiValore(self, evt):
+        evt.Skip()
+        return
+    
+    def aggiornaPos(self, evt):
+        value = evt.GetEventObject().GetValue()
+        (row, col) = self.alfanumericToNumberCellCoord(value)
+        self.mainGrid.GoToCell(row, col)
+        
+        #Non sposta il cursore visibile
+        
+        evt.Skip()
+        return
+    
+    def cellaInCambiamento(self, evt):
+        row = evt.GetRow()
+        col = evt.GetCol()
+        
+        self.aggiornaComboBox(row, col)
+        
+        
+        
+        evt.Skip()
+        return
+    
     def cellaCambiata(self, evt):
 #         self.deviSalvare = True
         #Qui andrebbero controllate se ci sono operazioni o se la cella cambiata può cambiare il valore di qualche altra
@@ -649,6 +679,13 @@ class Finestra(wx.Frame):
         if "=" in cont:
             self.operazioni(row, col)
         self.cellaOperazione(row, col)
+        evt.Skip()
+        return
+    
+    def aggiornaComboBox(self, row, col):
+        cella = str(self.mainGrid.GetColLabelValue(col)) + str(row + 1)
+        self.indicatoreCelle.SetValue(cella)
+        return
     
     def cellaOperazione(self, row:int, col:int) -> None:
         cella = (row, col)
