@@ -1176,6 +1176,7 @@ class Finestra(wx.Frame):
             
         elif risposta == wx.ID_CANCEL:
             return
+        return
 
 
 # ----------------------------------------
