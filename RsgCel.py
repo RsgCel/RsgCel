@@ -1014,8 +1014,10 @@ class Finestra(wx.Frame):
         return
     
     def funzioneStampa(self, evt):
-        #PrintGrid()
-        return
+        printout = GridPrintout(self.mainGrid, "Stampa")
+        printer = wx.Printer()
+        #prompt True così mostra la finestra di dialogo nella stampa
+        printer.Print(self, printout, prompt=True)
     
     def funzioneImpostazioniStampante(self, evt):
         return
@@ -1179,6 +1181,44 @@ class Finestra(wx.Frame):
         elif risposta == wx.ID_CANCEL:
             return
         return
+#la classe ereditata da wx.Printout definisce il contenuto della stampa del foglio di calcolo
+class GridPrintout(wx.Printout):
+    def __init__(self, grid, title):
+        super().__init__(title)
+        self.mainGrid = grid
+
+#a inizio stampa
+    def OnPreparePrinting(self):
+        self.page_conta = 1
+
+#FUNZIONE chiamata per ogni pagina
+    def OnPrintPage(self, page):
+        #disegno la griglia -> poi utilizzo DrawGrid
+        dc = self.GetDC()
+        if dc is not None:
+            dc.SetFont(self.grid.GetDefaultCellFont())
+            dc.SetPen(wx.BLACK_PEN)
+            dc.SetBrush(wx.WHITE_BRUSH)
+            dc.Clear()
+
+            pageSize = self.GetPageSizePixels()
+            pageRect = self.GetPageRectPixels()
+
+            # Calcola le dimensioni della griglia in base alle dimensioni della pagina di stampa
+            nR, nC = self.grid.GetNumberRows(), self.grid.GetNumberCols()
+            total_width = sum([self.grid.GetColSize(col) for col in range(nC)])
+            total_height = sum([self.grid.GetRowSize(row) for row in range(nR)])
+
+            # Calcola la posizione di partenza per disegnare la griglia
+            start_x = pageRect.x + ((page * pageSize.x) // pageSize.GetWidth())
+            start_y = pageRect.y + ((page * pageSize.y) // pageSize.GetHeight())
+
+            # Disegna la griglia
+            self.grid.DrawGrid(start_x, start_y, total_width, total_height, dc)
+
+            return True
+
+        return False
 
 
 # ----------------------------------------
