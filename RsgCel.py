@@ -385,7 +385,7 @@ class Finestra(wx.Frame):
     def creaToolbar(self):
         toolbar = self.CreateToolBar()
         
-        toolbar.AddTool(wx.ID_OPEN, "Nuovo",  wx.ArtProvider.GetBitmap(wx.ART_NEW))
+        toolbar.AddTool(wx.ID_NEW, "Nuovo",  wx.ArtProvider.GetBitmap(wx.ART_NEW))
         toolbar.AddTool(wx.ID_OPEN, "Apri",  wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN))
         toolbar.AddTool(wx.ID_SAVE, "Salva", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE))
 
@@ -401,12 +401,12 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
         
-        toolbar.AddTool(wx.ID_EXIT, "Annulla",  wx.ArtProvider.GetBitmap(wx.ART_UNDO))
-        toolbar.AddTool(wx.ID_EXIT, "Ripristina",  wx.ArtProvider.GetBitmap(wx.ART_REDO))
+        toolbar.AddTool(wx.ID_UNDO, "Annulla",  wx.ArtProvider.GetBitmap(wx.ART_UNDO))
+        toolbar.AddTool(wx.ID_REDO, "Ripristina",  wx.ArtProvider.GetBitmap(wx.ART_REDO))
         
         toolbar.AddSeparator()
         
-        toolbar.AddTool(wx.ID_EXIT, "Trova e sostituisci",  wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE))
+        toolbar.AddTool(ID_TrovaESos, "Trova e sostituisci",  wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE))
         
         toolbar.AddSeparator()
         
