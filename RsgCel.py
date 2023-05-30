@@ -146,9 +146,9 @@ class Finestra(wx.Frame):
         customItemTrovaESos = wx.MenuItem(editMenu, ID_TrovaESos, "Trova e sostituisci")
 
 
-        annullaItem = wx.MenuItem(fileMenu,wx.ID_UNDO,"Annulla")
+        annullaItem = wx.MenuItem(editMenu,wx.ID_UNDO,"Annulla")
         annullaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_UNDO))
-        fileMenu.Append(annullaItem)
+        editMenu.Append(annullaItem)
         ripristinaItem = wx.MenuItem(editMenu,wx.ID_REDO, "Ripristina")
         ripristinaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_REDO))
         editMenu.Append(ripristinaItem)
