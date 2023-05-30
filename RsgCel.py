@@ -822,7 +822,7 @@ class Finestra(wx.Frame):
         
         # Quando salvi su un file già esistente controlla anche se la cella è già salvata da qualche parte
         # Formato .xlrsg
-        dlg = wx.FileDialog(None, "Salva File", style=wx.FD_SAVE)
+        dlg = wx.FileDialog(None, "Salva File", style=wx.FD_SAVE, wildcard="RsgCel files (*.xlrsg)|*.xlrsg")
         if dlg.ShowModal() == wx.ID_CANCEL:
             return False
         
