@@ -391,13 +391,13 @@ class Finestra(wx.Frame):
 
         toolbar.AddSeparator()
 
-        toolbar.AddTool(wx.ID_EXIT, "Stampa",  wx.ArtProvider.GetBitmap(wx.ART_PRINT))
+        toolbar.AddTool(wx.ID_PRINT, "Stampa",  wx.ArtProvider.GetBitmap(wx.ART_PRINT))
         
         toolbar.AddSeparator()
         
-        toolbar.AddTool(wx.ID_EXIT, "Taglia",  wx.ArtProvider.GetBitmap(wx.ART_CUT))
-        toolbar.AddTool(wx.ID_EXIT, "Copia",  wx.ArtProvider.GetBitmap(wx.ART_COPY))
-        toolbar.AddTool(wx.ID_EXIT, "Incolla",  wx.ArtProvider.GetBitmap(wx.ART_PASTE))
+        toolbar.AddTool(wx.ID_CUT, "Taglia",  wx.ArtProvider.GetBitmap(wx.ART_CUT))
+        toolbar.AddTool(wx.ID_COPY, "Copia",  wx.ArtProvider.GetBitmap(wx.ART_COPY))
+        toolbar.AddTool(wx.ID_PASTE, "Incolla",  wx.ArtProvider.GetBitmap(wx.ART_PASTE))
         
         toolbar.AddSeparator()
         
