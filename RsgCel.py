@@ -1123,10 +1123,20 @@ class Finestra(wx.Frame):
     
     #Funzioni Stili
     def funzioneSelFont(self,evt):
+        datiIniziali = wx.FontData()
+        dialog = wx.FontDialog(self, datiIniziali)
+        if dialog.ShowModal() != wx.ID_OK:
+            return
+
+        datiFinali = dialog.GetFontData()
+        fontSelezionato = datiFinali.GetChosenFont()
+       
+        self.mainGrid.SetFont(fontSelezionato)
         return
     
     #Funzioni Foglio
     def funzionePulisciCelle(self,evt):
+        self.mainGrid.ClearGrid()
         return
     def funzioneRinomina(self,evt):
         return
@@ -1144,15 +1154,28 @@ class Finestra(wx.Frame):
  
     # Funzioni Aiuto
     def funzioneInfoLic(self, evt):
+        dial = wx.MessageDialog(None, "Licenza: Open Source,programma disponibile per tutti", "Informazione Licenza", wx.OK | wx.ICON_INFORMATION)
+        dial.ShowModal()
         return
     def funzioneInfoRSG(self, evt):
+        dial = wx.MessageDialog(None, "RSG Cel\nVersione: 1.0.0\nSviluppatori: Gramazio Rocco,Ristè Thatiely,Solfanelli Davide\nRSG Cel è un programma per fare fogli di calcolo", "Informazione RSG cel", wx.OK | wx.ICON_INFORMATION)
+        dial.ShowModal()
         return
     def funzioneAiuto(self, evt):
         return
     def funzioneDocumentazione(self, evt):
         return
     def funzioneDonazione(self, evt):
-        return
+        dial = wx.MessageDialog(None, "Sei sicuro di voler darci dei soldi?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
+        risposta = dial.ShowModal()
+        if risposta == wx.ID_YES:
+            return
+            
+        elif risposta == wx.ID_NO:
+            return
+            
+        elif risposta == wx.ID_CANCEL:
+            return
 
 
 # ----------------------------------------
