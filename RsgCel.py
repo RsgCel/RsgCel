@@ -777,9 +777,10 @@ class Finestra(wx.Frame):
     
     def cellDictFromFileString(self, stringa:str) -> dict:
         """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
-        if stringa != "vuoto":
+        if stringa != "vuoto\n":
             dizionarioCelle = {}
             listaCelle = stringa.split("\n")
+            print(listaCelle)
             if listaCelle[-1] == "":
                 listaCelle.pop(-1)
             for cella in listaCelle:
@@ -797,18 +798,22 @@ class Finestra(wx.Frame):
                 a = listaCella[10]   #Alpha
                 hAlign = listaCella[11]
                 vAlign = listaCella[12]
+                fontString = listaCella[13]
                 
-                dizionarioCelle[(row, col)] = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
+                dizionarioCelle[(row, col)] = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign), str(fontString)]
             return dizionarioCelle
 
     # rc = rowCol
     def rcDictFromFileString(self, rcStringa:str) -> dict:
         """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
-        if rcStringa != "vuoto":
+        if rcStringa != "vuoto\n":
             dizionario = {}
-            for rowCol in rcStringa.split("\n"):
+            listaRowCol = rcStringa.split("\n")
+            if listaRowCol[-1] == "":
+                listaRowCol.pop(-1)
+            for rowCol in listaRowCol:
                 listaRc = rowCol.split(", ")
-                dizionario[listaRc[0]] = lisraRc[1]
+                dizionario[listaRc[0]] = listaRc[1]
         return dizionario
         
     def funzioneSalva(self, evt, stringaFile = ""): #Se gli passi il contenuto del file(di default "") puoi usarla anche per salva normale
@@ -844,8 +849,9 @@ class Finestra(wx.Frame):
         (baseTr, baseTg, baseTb, baseTa) = self.mainGrid.GetDefaultCellTextColour()
         (baseR, baseG, baseB, baseA) = self.mainGrid.GetDefaultCellBackgroundColour().Get()
         (baseHAlign, baseVAlign) = self.mainGrid.GetDefaultCellAlignment()
+        fontString = self.mainGrid.GetDefaultCellFont().GetNativeFontInfoDesc()
         
-        baseCell = [str(baseCont), str(baseTr), str(baseTg), str(baseTb), str(baseTa), str(baseR), str(baseG), str(baseB), str(baseA), str(baseHAlign), str(baseVAlign)]
+        baseCell = [str(baseCont), str(baseTr), str(baseTg), str(baseTb), str(baseTa), str(baseR), str(baseG), str(baseB), str(baseA), str(baseHAlign), str(baseVAlign), str(fontString)]
             
         
         for row in range(self.mainGrid.GetNumberRows()):
@@ -881,9 +887,9 @@ class Finestra(wx.Frame):
                 (tr, tg, tb, ta) = self.mainGrid.GetCellTextColour(row, col).Get()
                 (r, g, b, a) = self.mainGrid.GetCellBackgroundColour(row, col).Get()
                 (hAlign, vAlign) = self.mainGrid.GetCellAlignment(row, col)
-                font = self.mainGrid.GetCellFont(row, col)
+                fontString = self.mainGrid.GetCellFont(row, col).GetNativeFontInfoDesc()
                 
-                cell = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign)]
+                cell = [str(cont), str(tr), str(tg), str(tb), str(ta), str(r), str(g), str(b), str(a), str(hAlign), str(vAlign), str(fontString)]
                 
                 if cell != baseCell:
                     celleModificate[(row, col)] = cell
@@ -949,37 +955,59 @@ class Finestra(wx.Frame):
         
         [celle, righe, colonne] = contenuto.split("Separatore\n")
         
-        dizionarioCelle = self.cellDictFromFileString(celle)
+        if celle != "vuoto\n":
         
-        for cella in dizionarioCelle:
-            row = int(cella[0])
-            col = int(cella[1])
-            cont = dizionarioCelle[cella][0]
-            tr = int(dizionarioCelle[cella][1])
-            tg = int(dizionarioCelle[cella][2])
-            tb = int(dizionarioCelle[cella][3])
-            ta = int(dizionarioCelle[cella][4])
-            r = int(dizionarioCelle[cella][5])
-            g = int(dizionarioCelle[cella][6])
-            b = int(dizionarioCelle[cella][7])
-            a = int(dizionarioCelle[cella][8])
-            hAlign = int(dizionarioCelle[cella][9])
-            vAlign = int(dizionarioCelle[cella][10])
-             
-            alignment = (hAlign, vAlign)
+            dizionarioCelle = self.cellDictFromFileString(celle)
             
-            self.mainGrid.SetCellValue(row, col, cont)
-            self.mainGrid.SetCellTextColour(row, col, wx.Colour(tr, tg, tb, ta))
-            self.mainGrid.SetCellBackgroundColour(row, col, wx.Colour(r, g, b, a))
-            self.mainGrid.SetCellAlignment(row, col, hAlign, vAlign)
-            
-        for cella in dizionarioCelle:
-            cont = dizionarioCelle[cella][0]
-            if "=" in cont:
+            for cella in dizionarioCelle:
                 row = int(cella[0])
                 col = int(cella[1])
-                self.operazioni(row, col)
+                cont = dizionarioCelle[cella][0]
+                tr = int(dizionarioCelle[cella][1])
+                tg = int(dizionarioCelle[cella][2])
+                tb = int(dizionarioCelle[cella][3])
+                ta = int(dizionarioCelle[cella][4])
+                r = int(dizionarioCelle[cella][5])
+                g = int(dizionarioCelle[cella][6])
+                b = int(dizionarioCelle[cella][7])
+                a = int(dizionarioCelle[cella][8])
+                hAlign = int(dizionarioCelle[cella][9])
+                vAlign = int(dizionarioCelle[cella][10])
+                fontString = dizionarioCelle[cella][11]
+                 
+                alignment = (hAlign, vAlign)
+                
+                self.mainGrid.SetCellValue(row, col, cont)
+                self.mainGrid.SetCellTextColour(row, col, wx.Colour(tr, tg, tb, ta))
+                self.mainGrid.SetCellBackgroundColour(row, col, wx.Colour(r, g, b, a))
+                self.mainGrid.SetCellAlignment(row, col, hAlign, vAlign)
+                
+            for cella in dizionarioCelle:
+                cont = dizionarioCelle[cella][0]
+                if "=" in cont:
+                    row = int(cella[0])
+                    col = int(cella[1])
+                    self.operazioni(row, col)
+        
+        if righe != "vuoto\n":
+        
+            dizionarioRighe = self.rcDictFromFileString(righe)
             
+            for riga in dizionarioRighe:
+                row = int(riga[0])
+                height = int(dizionarioRighe[riga])
+                
+                self.mainGrid.SetRowSize(row, height)
+        
+        if colonne != "vuoto\n":
+        
+            dizionarioColonne = self.rcDictFromFileString(colonne)
+            
+            for colonna in dizionarioColonne:
+                row = int(colonna[0])
+                width = int(dizionarioColonne[colonna])
+                
+                self.mainGrid.SetColSize(row, width)
             
         
         #DA RIVEDERE
