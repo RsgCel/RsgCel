@@ -422,6 +422,12 @@ class Finestra(wx.Frame):
 
     # in questa funzione aggiungeremo la statusbar
     def creaStatusbar(self):
+        self.statusBar = self.CreateStatusBar()
+        self.statusBar.SetFieldsCount(8)
+        listaOperazioni = ["Somma", "Sottrazione", "Moltiplicazione", "Divisione", "Media", "Massimo", "Minimo"]
+        for a in listaOperazioni:
+            field = listaOperazioni.index(a) + 1
+            self.statusBar.SetStatusText(a + ": 0", field)
         return
 
     # questa funzione implementa la vista principale del programma
@@ -863,6 +869,8 @@ class Finestra(wx.Frame):
             else:
                 listaCoordCelle = self.somma[(row, col)]
             
+            
+            self.statusBar.SetStatusText("Somma: " + str(len(self.somma)), 1)
             output = self.calcoloSomma(listaCoordCelle)
             
         elif "-" in cont or "-" in op:
@@ -873,6 +881,7 @@ class Finestra(wx.Frame):
             else:
                 listaCoordCelle = self.sottrazione[(row, col)]
             
+            self.statusBar.SetStatusText("Sottrazione: " + str(len(self.sottrazione)), 2)
             output = self.calcoloSottrazione(listaCoordCelle)
             
         elif "*" in cont or "*" in op:
@@ -883,6 +892,7 @@ class Finestra(wx.Frame):
             else:
                 listaCoordCelle = self.moltiplicazione[(row, col)]
             
+            self.statusBar.SetStatusText("Moltiplicazione: " + str(len(self.moltiplicazione)), 2)
             output = self.calcoloMoltiplicazione(listaCoordCelle)
         
         elif "/" in cont or "/" in op:
@@ -893,6 +903,7 @@ class Finestra(wx.Frame):
             else:
                 listaCoordCelle = self.divisione[(row, col)]
             
+            self.statusBar.SetStatusText("Divisione: " + str(len(self.divisione)), 3)
             output = self.calcoloDivisione(listaCoordCelle)
             
         elif "MEDIA" in cont or "MEDIA" in op:
@@ -905,6 +916,7 @@ class Finestra(wx.Frame):
             else:
                 listaCoordCelle = self.media[(row, col)]
             
+            self.statusBar.SetStatusText("Media: " + str(len(self.media)), 4)
             output = self.calcoloMedia(listaCoordCelle)
         
         elif "MAX" in cont or "MAX" in op:
@@ -917,6 +929,7 @@ class Finestra(wx.Frame):
             else:
                 listaCoordCelle = self.massimo[(row, col)]
             
+            self.statusBar.SetStatusText("Massimo: " + str(len(self.massimo)), 5)
             output = self.calcoloMax(listaCoordCelle)
         
         elif "MIN" in cont or "MIN" in op:
@@ -929,6 +942,7 @@ class Finestra(wx.Frame):
             else:
                 listaCoordCelle = self.minimo[(row, col)]
             
+            self.statusBar.SetStatusText("Minimo: " + str(len(self.minimo)), 6)
             output = self.calcoloMin(listaCoordCelle)
             
         self.mainGrid.SetCellValue(row, col, output)
