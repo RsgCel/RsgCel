@@ -410,8 +410,9 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
         
-        self.digitazione = wx.TextCtrl(toolbar, size=(1075,-1))
-        toolbar.AddControl(self.digitazione)
+        bottoneCaratteri = wx.Button(toolbar, label="Scegli Carattere", size=(115,25))
+        bottoneCaratteri.Bind(wx.EVT_BUTTON, self.funzioneScegliCarattere)
+        toolbar.AddControl(bottoneCaratteri)
 
         toolbar.Realize()
         
@@ -1174,9 +1175,15 @@ class Finestra(wx.Frame):
         return
     
     def funzioneTrova(self, evt):
+        trovadial = wx.TextEntryDialog(None, "Cosa cerchi?", "Trova")
+        trovadial.ShowModal()
+        
         return
     
     def funzioneTrovaeSostituisci(self, evt):
+        trovaEsosdial = wx.FindReplaceDialog(None, "Trova e Sostituisci") # Manca qualcosa (data)
+        trovaEsosdial.ShowModal()
+        
         return
     
     # Funzioni Visualizza
@@ -1212,6 +1219,13 @@ class Finestra(wx.Frame):
     
     # Funzione Inserisci
     def funzioneImmagine(self, evt):
+        dlg = wx.FileDialog(None, "Apri File", style=wx.FD_OPEN)
+        if dlg.ShowModal() == wx.ID_CANCEL:
+            return
+
+        percorso = dlg.GetPath()
+        
+        # Capire come inserire immagine nella griglia
         return
     
     def funzioneFunzione(self, evt):
@@ -1297,6 +1311,20 @@ class Finestra(wx.Frame):
         elif risposta == wx.ID_CANCEL:
             return
         return
+    
+        def funzioneScegliCarattere(self, evt):
+            datiIniziali = wx.FontData()
+            dialog = wx.FontDialog(self, datiIniziali)
+            if dialog.ShowModal() != wx.ID_OK:
+                return
+
+            datiFinali = dialog.GetFontData()
+            fontSelezionato = datiFinali.GetChosenFont()
+
+            self.mainGrid.SetFont(fontSelezionato) # Vedere come impostare il font nella griglia
+
+            return
+        
 #la classe ereditata da wx.Printout definisce il contenuto della stampa del foglio di calcolo
 class GridPrintout(wx.Printout):
     def __init__(self, grid, title):
