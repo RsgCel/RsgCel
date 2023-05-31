@@ -429,25 +429,24 @@ class Finestra(wx.Frame):
         
         vbox1 = wx.BoxSizer(wx.VERTICAL)
         
-        self.mainGrid = wx.grid.Grid(panel)
+        self.mainGrid = wx.grid.Grid(panel, style =  wx.TE_PROCESS_ENTER)
         self.mainGrid.CreateGrid(100, 100)
         self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.cellaCambiata)
-        self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_LEFT_CLICK, self.cellaInCambiamento)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_EDITOR_SHOWN, self.editorMostrato)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_EDITOR_HIDDEN, self.editorNascosto)
+        self.mainGrid.Bind(wx.EVT_TEXT, self.cellaInCambiamento)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.cursoreSpostato)
         
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         
-        self.indicatoreCelle = wx.ComboBox(panel, size = (150, -1), value = "A1", choices = [""], style =  wx.TE_PROCESS_ENTER)
-        self.btnFunction = wx.Button(panel, size = (23, 23))
-        self.btnFormula = wx.Button(panel, size = (23, 23))
+        self.indicatoreCelle = wx.TextCtrl(panel, size = (150, -1), value = "A1", style =  wx.TE_PROCESS_ENTER)
+        staticTextVuota = wx.StaticText(panel, size = (25, -1))
         self.barraCella = wx.TextCtrl(panel)
         
-        
-        self.indicatoreCelle.Bind(wx.EVT_COMBOBOX, self.rimettiValore)
         self.indicatoreCelle.Bind(wx.EVT_TEXT_ENTER, self.aggiornaPos)
         
         hbox1.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(self.btnFunction, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(self.btnFormula, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
         hbox1.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
         
         vbox1.Add(hbox1, proportion = 0, flag = wx.EXPAND)
@@ -462,8 +461,8 @@ class Finestra(wx.Frame):
         icon = wx.Icon()
         icon.CopyFromBitmap(wx.Bitmap("icon.png", wx.BITMAP_TYPE_ANY))
         self.SetIcon(icon)
-        
         return
+    
     def funzioneChiudi(self,evt): #CLEAR NON FUNZIONA DA RIVEDERE
         dial = wx.MessageDialog(None, "Vuoi salvare prima di chiudere il foglio di calcolo?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
         risposta = dial.ShowModal()
@@ -482,6 +481,7 @@ class Finestra(wx.Frame):
             return
         self.deviSalvare = False
         return
+    
     def funzioneEsci(self,evt): #NON FUNZIONA
         config = wx.FileConfig(APP_NAME)
         
@@ -645,30 +645,81 @@ class Finestra(wx.Frame):
         rowNumber = tupla[1] + tupla[2]
         return (int(rowNumber) - 1, int(colNumber))
     
-    def rimettiValore(self, evt):
-        evt.Skip()
-        return
-    
     def aggiornaPos(self, evt):
         value = evt.GetEventObject().GetValue()
         (row, col) = self.alfanumericToNumberCellCoord(value)
         self.mainGrid.GoToCell(row, col)
-        
-        #Non sposta il cursore visibile
-        
+        self.mainGrid.SetFocus()        
         evt.Skip()
         return
     
-    def cellaInCambiamento(self, evt):
+    def editorNascosto(self, evt):
         row = evt.GetRow()
         col = evt.GetCol()
-        
-        self.aggiornaComboBox(row, col)
-        
-        
-        
-        evt.Skip()
+        row = evt.GetRow()
+        col = evt.GetCol()
+        cont = self.mainGrid.GetCellValue(row, col)
+        if "=" in cont:
+            self.operazioni(row, col)
         return
+    
+    def editorMostrato(self, evt):
+        row = evt.GetRow()
+        col = evt.GetCol()
+        cont = self.mainGrid.GetCellValue(row, col)
+        cont = self.aggiornaBarraCella(row, col, cont)
+        self.mainGrid.SetCellValue(row, col, cont)
+        return
+    
+    def cursoreSpostato(self, evt):
+        row = evt.GetRow()
+        col = evt.GetCol()
+        cont = self.mainGrid.GetCellValue(row, col)
+        self.aggiornaIndicatorePos(evt)
+        self.aggiornaBarraCella(row, col, cont)
+        return
+    
+    def aggiornaIndicatorePos(self, evt):
+        row = evt.GetRow()
+        col = evt.GetCol()
+        self.aggiornaComboBox(row, col)
+        return
+    
+    def cellaInCambiamento(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        cont = self.mainGrid.GetCellEditor(row, col).GetValue()
+        self.aggiornaBarraCella(row, col, cont)
+    
+    def aggiornaBarraCella(self, row, col, cont):
+        cella = (row, col)
+        for a in self.somma:
+            if a == cella:
+                cont = self.creaContenutoOperazione(self.somma[a], "+")
+                break
+        
+        for a in self.sottrazione:
+            if a == cella:
+                cont = self.creaContenutoOperazione(self.sottrazione[a], "-")
+                break
+        
+        for a in self.divisione:
+            if a == cella:
+                cont = self.creaContenutoOperazione(self.divisione[a], "/")
+                break
+        
+        for a in self.moltiplicazione:
+            if a == cella:
+                cont = self.creaContenutoOperazione(self.moltiplicazione[a], "*")
+                break
+        
+        for a in self.media:
+            if a == cella:
+                cont = self.creaContenutoOperazione(self.media[a], "MEDIA")
+                break
+        
+        self.barraCella.SetValue(cont)
+        return cont
     
     def cellaCambiata(self, evt):
 #         self.deviSalvare = True
