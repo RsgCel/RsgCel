@@ -982,7 +982,6 @@ class Finestra(wx.Frame):
         if stringa != "vuoto\n":
             dizionarioCelle = {}
             listaCelle = stringa.split("\n")
-            print(listaCelle)
             if listaCelle[-1] == "":
                 listaCelle.pop(-1)
             for cella in listaCelle:
