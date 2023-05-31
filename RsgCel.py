@@ -53,6 +53,8 @@ class Finestra(wx.Frame):
         self.sottrazione = {}
         self.divisione = {}
         self.media = {}
+        self.massimo = {}
+        self.minimo = {}
 
         # -------------------------------------------
 
@@ -445,6 +447,8 @@ class Finestra(wx.Frame):
         self.barraCella = wx.TextCtrl(panel)
         
         self.indicatoreCelle.Bind(wx.EVT_TEXT_ENTER, self.aggiornaPos)
+        self.barraCella.Bind(wx.EVT_TEXT, self.aggiornaCella)
+        self.barraCella.Bind(wx.EVT_KILL_FOCUS, self.operazioniOnLostFocus)
         
         hbox1.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
         hbox1.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
@@ -625,6 +629,46 @@ class Finestra(wx.Frame):
             return str(int(media))
         return str(media)
     
+    def calcoloMax(self, cellCoordsList:list) -> str:
+        listaValori = []
+        for a in cellCoordsList:
+            listaValori.append(self.mainGrid.GetCellValue(a[0], a[1]))
+        
+        for a in listaValori:
+            if not a.isnumeric():
+                return "ERROR"
+        
+        listaValoriFloat = []
+        for a in listaValori:
+            listaValoriFloat.append(float(a))
+        
+        massimo = max(listaValoriFloat)
+        
+        if int(massimo) == massimo:
+            massimo = int(massimo)
+        
+        return str(massimo)
+
+    def calcoloMin(self, cellCoordsList:list) -> str:
+        listaValori = []
+        for a in cellCoordsList:
+            listaValori.append(self.mainGrid.GetCellValue(a[0], a[1]))
+        
+        for a in listaValori:
+            if not a.isnumeric():
+                return "ERROR"
+        
+        listaValoriFloat = []
+        for a in listaValori:
+            listaValoriFloat.append(float(a))
+        
+        minimo = min(listaValoriFloat)
+        
+        if int(minimo) == minimo:
+            minimo = int(minimo)
+        
+        return str(minimo)
+    
     def alfanumericCellsListToCoordCellList(self, listaCelle:list) -> list:
         listaCoordsCelle = []
         for a in listaCelle:
@@ -653,6 +697,26 @@ class Finestra(wx.Frame):
         self.mainGrid.SetFocus()        
         evt.Skip()
         return
+    
+    def aggiornaCella(self, evt):
+        if evt.GetEventObject().IsModified():
+            row = self.mainGrid.GetGridCursorRow()
+            col = self.mainGrid.GetGridCursorCol()
+            cont = evt.GetEventObject().GetValue()
+            if cont != "":
+                self.mainGrid.SetCellValue(row, col, cont)
+        return
+    
+    def operazioniOnLostFocus(self, evt):
+        if evt.GetEventObject().IsModified():
+            row = self.mainGrid.GetGridCursorRow()
+            col = self.mainGrid.GetGridCursorCol()
+            cont = evt.GetEventObject().GetValue()
+            if "=" in cont:
+                self.operazioni(row, col)
+            self.cellaOperazione(row, col)
+        return
+        
     
     def editorNascosto(self, evt):
         row = evt.GetRow()
@@ -690,7 +754,8 @@ class Finestra(wx.Frame):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
         cont = self.mainGrid.GetCellEditor(row, col).GetValue()
-        self.aggiornaBarraCella(row, col, cont)
+        self.barraCella.SetValue(cont)
+        return
     
     def aggiornaBarraCella(self, row, col, cont):
         cella = (row, col)
@@ -717,6 +782,16 @@ class Finestra(wx.Frame):
         for a in self.media:
             if a == cella:
                 cont = self.creaContenutoOperazione(self.media[a], "MEDIA")
+                break
+        
+        for a in self.massimo:
+            if a == cella:
+                cont = self.creaContenutoOperazione(self.massimo[a], "MAX")
+                break
+        
+        for a in self.minimo:
+            if a == cella:
+                cont = self.creaContenutoOperazione(self.minimo[a], "MIN")
                 break
         
         self.barraCella.SetValue(cont)
@@ -765,6 +840,16 @@ class Finestra(wx.Frame):
             for b in self.media[a]:
                 if b == cella:
                     self.operazioni(a[0], a[1], main = False, op = "MEDIA")
+        
+        for a in self.massimo:
+            for b in self.massimo[a]:
+                if b == cella:
+                    self.operazioni(a[0], a[1], main = False, op = "MAX")
+        
+        for a in self.minimo:
+            for b in self.minimo[a]:
+                if b == cella:
+                    self.operazioni(a[0], a[1], main = False, op = "MIN")
             
     def operazioni(self, row:int, col:int, main = True, op = "") -> None:
         cont = self.mainGrid.GetCellEditor(row, col).GetValue()
@@ -821,6 +906,30 @@ class Finestra(wx.Frame):
                 listaCoordCelle = self.media[(row, col)]
             
             output = self.calcoloMedia(listaCoordCelle)
+        
+        elif "MAX" in cont or "MAX" in op:
+            if main:
+                cont = cont.replace(")", "")
+                cont = cont.replace("MAX(", "")
+                listaCelle = cont.split(";")
+                listaCoordCelle = self.alfanumericCellsListToCoordCellList(listaCelle)
+                self.massimo[(row, col)] = listaCoordCelle
+            else:
+                listaCoordCelle = self.massimo[(row, col)]
+            
+            output = self.calcoloMax(listaCoordCelle)
+        
+        elif "MIN" in cont or "MIN" in op:
+            if main:
+                cont = cont.replace(")", "")
+                cont = cont.replace("MIN(", "")
+                listaCelle = cont.split(";")
+                listaCoordCelle = self.alfanumericCellsListToCoordCellList(listaCelle)
+                self.minimo[(row, col)] = listaCoordCelle
+            else:
+                listaCoordCelle = self.minimo[(row, col)]
+            
+            output = self.calcoloMin(listaCoordCelle)
             
         self.mainGrid.SetCellValue(row, col, output)
         return
@@ -857,10 +966,14 @@ class Finestra(wx.Frame):
             col = a[1]
             colLabel = self.mainGrid.GetColLabelValue(col)
             listaCelle.append(str(colLabel) + str(row + 1))
-        if segno != "MEDIA":
+        if not segno in ("MEDIA", "MAX", "MIN"):
             cont = "=" + segno.join(listaCelle)
-        else:
+        elif segno == "MEDIA":
             cont = "=MEDIA(" + ";".join(listaCelle) + ")"
+        elif segno == "MAX":
+            cont = "=MAX(" + ";".join(listaCelle) + ")"
+        elif segno == "MIN":
+            cont = "=MIN(" + ";".join(listaCelle) + ")"
         return cont
                 
     
@@ -971,6 +1084,16 @@ class Finestra(wx.Frame):
                 for a in self.media:
                     if a == cella:
                         cont = self.creaContenutoOperazione(self.media[a], "MEDIA")
+                        break
+                
+                for a in self.massimo:
+                    if a == cella:
+                        cont = self.creaContenutoOperazione(self.massimo[a], "MAX")
+                        break
+                
+                for a in self.minimo:
+                    if a == cella:
+                        cont = self.creaContenutoOperazione(self.minimo[a], "MIN")
                         break
                 
                 (tr, tg, tb, ta) = self.mainGrid.GetCellTextColour(row, col).Get()
