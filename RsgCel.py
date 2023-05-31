@@ -1312,18 +1312,18 @@ class Finestra(wx.Frame):
             return
         return
     
-        def funzioneScegliCarattere(self, evt):
-            datiIniziali = wx.FontData()
-            dialog = wx.FontDialog(self, datiIniziali)
-            if dialog.ShowModal() != wx.ID_OK:
-                return
-
-            datiFinali = dialog.GetFontData()
-            fontSelezionato = datiFinali.GetChosenFont()
-
-            self.mainGrid.SetFont(fontSelezionato) # Vedere come impostare il font nella griglia
-
+    def funzioneScegliCarattere(self, evt):
+        datiIniziali = wx.FontData()
+        dialog = wx.FontDialog(self, datiIniziali)
+        if dialog.ShowModal() != wx.ID_OK:
             return
+
+        datiFinali = dialog.GetFontData()
+        fontSelezionato = datiFinali.GetChosenFont()
+
+        self.mainGrid.SetFont(fontSelezionato) # Vedere come impostare il font nella griglia
+
+        return
         
 #la classe ereditata da wx.Printout definisce il contenuto della stampa del foglio di calcolo
 class GridPrintout(wx.Printout):
