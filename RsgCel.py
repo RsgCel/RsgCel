@@ -767,7 +767,7 @@ class Finestra(wx.Frame):
                     self.operazioni(a[0], a[1], main = False, op = "MEDIA")
             
     def operazioni(self, row:int, col:int, main = True, op = "") -> None:
-        cont = self.mainGrid.GetCellValue(row, col)
+        cont = self.mainGrid.GetCellEditor(row, col).GetValue()
         cont = cont.replace("=", "")
         cont = cont.replace(" ", "")
         if "+" in cont or "+" in op:
