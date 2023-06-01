@@ -6,6 +6,7 @@ import wx, wx.grid
 
 APP_NAME = "RsgCel"
 EXTENSION = ".xlrsg"
+TITOLO_INIZIALE = "(Senza Titolo)"
 
 ID_DOCRec = 1
 ID_SalvaNome = 2
@@ -44,7 +45,7 @@ ID_Donazioni=34
 class Finestra(wx.Frame):
 
     def __init__(self):
-        super().__init__(None, title=APP_NAME)
+        super().__init__(None, title=TITOLO_INIZIALE + " - " + APP_NAME)
 
         # Spazio per le variabili membro della classe
         self.deviSalvare = False
@@ -55,6 +56,7 @@ class Finestra(wx.Frame):
         self.media = {}
         self.massimo = {}
         self.minimo = {}
+        self.percorso = TITOLO_INIZIALE
 
         # -------------------------------------------
 
@@ -424,6 +426,7 @@ class Finestra(wx.Frame):
     def creaStatusbar(self):
         self.statusBar = self.CreateStatusBar()
         self.statusBar.SetFieldsCount(8)
+        self.statusBar.SetStatusText("Salvato")
         listaOperazioni = ["Somma", "Sottrazione", "Moltiplicazione", "Divisione", "Media", "Massimo", "Minimo"]
         for a in listaOperazioni:
             field = listaOperazioni.index(a) + 1
@@ -472,6 +475,10 @@ class Finestra(wx.Frame):
         icon = wx.Icon()
         icon.CopyFromBitmap(wx.Bitmap("icon.png", wx.BITMAP_TYPE_ANY))
         self.SetIcon(icon)
+        
+        #Timer scritta StatusBar
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.aggiornaStatusBarSalvataggio, self.timer)
         return
     
     def funzioneChiudi(self,evt): #CLEAR NON FUNZIONA DA RIVEDERE
@@ -706,6 +713,8 @@ class Finestra(wx.Frame):
     
     def aggiornaCella(self, evt):
         if evt.GetEventObject().IsModified():
+            self.deviSalvare = True
+            self.statusBar.SetStatusText("Non salvato")
             row = self.mainGrid.GetGridCursorRow()
             col = self.mainGrid.GetGridCursorCol()
             cont = evt.GetEventObject().GetValue()
@@ -757,6 +766,8 @@ class Finestra(wx.Frame):
         return
     
     def cellaInCambiamento(self, evt):
+#         self.deviSalvare = True
+#         self.statusBar.SetStatusText("Non salvato")
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
         cont = self.mainGrid.GetCellEditor(row, col).GetValue()
@@ -804,7 +815,8 @@ class Finestra(wx.Frame):
         return cont
     
     def cellaCambiata(self, evt):
-#         self.deviSalvare = True
+        self.deviSalvare = True
+        self.statusBar.SetStatusText("Non salvato")
         #Qui andrebbero controllate se ci sono operazioni o se la cella cambiata può cambiare il valore di qualche altra
         row = evt.GetRow()
         col = evt.GetCol()
@@ -951,27 +963,29 @@ class Finestra(wx.Frame):
     def dictToString(self, dizionario:dict) -> str:
         """Creo una stringa partendo dal dizionario fornito. Per ogni riga una lista poi trasnformata in stringa di chiavi e rispettivi valori"""
         stringa = ""
-        for key in dizionario:
-            lista = []
-            match key:
-                case tuple():
-                    for coord in key:
-                        lista.append(str(coord))
-                case str() | int():
-                    lista.append(str(key))
-                case other:
-                    pass
+        if dizionario != None:
+            for key in dizionario:
+                lista = []
+                match key:
+                    case tuple():
+                        for coord in key:
+                            lista.append(str(coord))
+                    case str() | int():
+                        lista.append(str(key))
+                    case other:
+                        pass
+                
+                match dizionario[key]:
+                    case list():
+                        for value in dizionario[key]:
+                            lista.append(str(value))
+                        stringa += ", ".join(lista) + "\n"
+                    case str() | int():
+                        lista.append(dizionario[key])
+                        stringa += ", ".join(lista) + "\n"
             
-            match dizionario[key]:
-                case list():
-                    for value in dizionario[key]:
-                        lista.append(str(value))
-                    stringa += ", ".join(lista) + "\n"
-                case str() | int():
-                    lista.append(dizionario[key])
-                    stringa += ", ".join(lista) + "\n"
-        
-        return stringa
+            return stringa
+        return ""
     
     def creaContenutoOperazione(self, cellCoordsList, segno):
         listaCelle = []
@@ -1029,9 +1043,16 @@ class Finestra(wx.Frame):
             for rowCol in listaRowCol:
                 listaRc = rowCol.split(", ")
                 dizionario[listaRc[0]] = listaRc[1]
-        return dizionario
+            return dizionario
+        return
+    
+    def aggiornaStatusBarSalvataggio(self, evt):
+        if self.deviSalvare:
+            self.statusBar.SetStatusText("Non salvato")
+        else:
+            self.statusBar.SetStatusText("Salvato")
         
-    def funzioneSalva(self, evt, stringaFile = ""): #Se gli passi il contenuto del file(di default "") puoi usarla anche per salva normale
+    def salva(self, stringaFile = "", copia = False, saveAs = False): #Se gli passi il contenuto del file(di default "") puoi usarla anche per salva normale
         # Celle
         #      row, col, cont, textColour, Colour, alignment
         #      Font
@@ -1042,11 +1063,15 @@ class Finestra(wx.Frame):
         
         # Quando salvi su un file già esistente controlla anche se la cella è già salvata da qualche parte
         # Formato .xlrsg
-        dlg = wx.FileDialog(None, "Salva File", style=wx.FD_SAVE, wildcard="RsgCel files (*.xlrsg)|*.xlrsg")
-        if dlg.ShowModal() == wx.ID_CANCEL:
-            return False
         
-        self.percorso = dlg.GetPath()
+        lastPercorso = self.percorso
+        
+        if saveAs or self.percorso == TITOLO_INIZIALE:
+            dlg = wx.FileDialog(None, "Salva File", style=wx.FD_SAVE, wildcard="RsgCel files (*.xlrsg)|*.xlrsg")
+            if dlg.ShowModal() == wx.ID_CANCEL:
+                return False
+            
+            self.percorso = dlg.GetPath()
         
         if stringaFile == "":
             celleModificate = {}
@@ -1056,7 +1081,8 @@ class Finestra(wx.Frame):
             listaStringaFile = stringaFile.split("Separatore\n")
             celleModificate = self.cellDictFromFileString(listaStringaFile[0])
             righeModificate = self.rcDictFromFileString(listaStringaFile[1])
-            colonneModificate = self.ecDictFromFileString(listaStringaFile[2])
+            colonneModificate = self.rcDictFromFileString(listaStringaFile[2])
+            stringaFile = ""
             
         baseHeight = self.mainGrid.GetDefaultRowSize()
         baseWidth = self.mainGrid.GetDefaultColSize()
@@ -1147,8 +1173,13 @@ class Finestra(wx.Frame):
         file.close()
         
         self.deviSalvare = False
+        self.statusBar.SetStatusText("SALVATAGGIO COMPLETATO")
+        self.timer.StartOnce(5000)
         
-        print("SALVATAGGIO COMPLETATO")
+        if copia:
+            self.percorso =lastPercorso
+        
+        self.SetTitle(self.percorso + " - " + APP_NAME)
         
         return
     
@@ -1233,13 +1264,10 @@ class Finestra(wx.Frame):
                 width = int(dizionarioColonne[colonna])
                 
                 self.mainGrid.SetColSize(row, width)
-            
-        
-        #DA RIVEDERE
-        
-        #PRIMA VANNO FATTE TUTTE LE OPERAZIONI
         
         self.deviSalvare = False
+        self.statusBar.SetStatusText("Salvato")
+        self.SetTitle(self.percorso + " - " + APP_NAME)
         return
 
     # Funzioni MenuBar
@@ -1258,12 +1286,22 @@ class Finestra(wx.Frame):
     def funzioneRicarica(self, evt):
         self.mainGrid.Refresh()
         return
-
+    
+    def funzioneSalva(self, evt):
+        stringaFile = ""
+        if self.percorso != TITOLO_INIZIALE:
+            f = open(self.percorso)
+            stringaFile = f.read()
+            f.close()
+        self.salva(stringaFile)
+        return
 
     def funzioneSalvaConNome(self, evt):
+        self.salva("", saveAs = True)
         return
     
     def funzioneSalvaCopia(self, evt):
+        self.salva("", copia = True, saveAs = True)
         return
     
     def funzioneStampa(self, evt):
