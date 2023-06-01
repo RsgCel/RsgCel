@@ -1346,6 +1346,9 @@ class Finestra(wx.Frame):
         return
     
     def funzioneSeleziona(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        self.mainGrid.SelectBlock(row, col, row, col, False)
         return
     
     def funzioneTrova(self, evt):
