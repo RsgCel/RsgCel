@@ -62,7 +62,6 @@ class Finestra(wx.Frame):
 
         # Chiamata alle funzioni che generano la UI
         self.creaMenubar()
-        self.creaToolbar()
         self.creaStatusbar()
         # -------------------------------------------
 
@@ -386,9 +385,7 @@ class Finestra(wx.Frame):
         return
 
     # in questa funzione andremo a creare e popolare la toolbar
-    def creaToolbar(self):
-        toolbar = self.CreateToolBar()
-        
+    def creaToolbar(self, toolbar):
         toolbar.AddTool(wx.ID_NEW, "Nuovo",  wx.ArtProvider.GetBitmap(wx.ART_NEW))
         toolbar.AddTool(wx.ID_OPEN, "Apri",  wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN))
         toolbar.AddTool(wx.ID_SAVE, "Salva", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE))
@@ -419,7 +416,25 @@ class Finestra(wx.Frame):
         toolbar.AddControl(bottoneCaratteri)
 
         toolbar.Realize()
+        return
+    
+    def creaToolbar2(self, toolbar):
+        caratereComboBox = wx.ComboBox(toolbar, size = (185, -1))
+        toolbar.AddControl(caratereComboBox)
         
+        spazioVuoto = wx.StaticText(toolbar, size = (9, -1))
+        toolbar.AddControl(spazioVuoto)
+        
+        
+        grandezzaComboBox = wx.ComboBox(toolbar, size = (60, -1))
+        toolbar.AddControl(grandezzaComboBox)
+        
+        toolbar.AddSeparator()
+
+        toolbar.AddTool(wx.ID_BOLD, "Grassetto",  wx.Bitmap("bold.png"))
+        toolbar.AddTool(wx.ID_ITALIC, "Corsivo",  wx.Bitmap("corsivo.png"))
+        
+        toolbar.Realize()
         return
 
     # in questa funzione aggiungeremo la statusbar
@@ -437,7 +452,18 @@ class Finestra(wx.Frame):
     def creaMainView(self):
         panel = wx.Panel(self)
         
-        mainLayout = wx.BoxSizer(wx.HORIZONTAL)
+        mainLayout = wx.BoxSizer(wx.VERTICAL)
+        
+        toolbar1 = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_NODIVIDER)
+        self.creaToolbar(toolbar1)
+        
+        toolbar2 = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_NODIVIDER)
+        self.creaToolbar2(toolbar2)
+        
+        mainLayout.Add(toolbar1, proportion = 0)
+        mainLayout.Add(toolbar2, proportion = 0)
+        
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         
         vbox1 = wx.BoxSizer(wx.VERTICAL)
         
@@ -449,7 +475,7 @@ class Finestra(wx.Frame):
         self.mainGrid.Bind(wx.EVT_TEXT, self.cellaInCambiamento)
         self.mainGrid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.cursoreSpostato)
         
-        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         
         self.indicatoreCelle = wx.TextCtrl(panel, size = (150, -1), value = "A1", style =  wx.TE_PROCESS_ENTER)
         staticTextVuota = wx.StaticText(panel, size = (25, -1))
@@ -459,15 +485,17 @@ class Finestra(wx.Frame):
         self.barraCella.Bind(wx.EVT_TEXT, self.aggiornaCella)
         self.barraCella.Bind(wx.EVT_KILL_FOCUS, self.operazioniOnLostFocus)
         
-        hbox1.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox2.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox2.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox2.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
         
-        vbox1.Add(hbox1, proportion = 0, flag = wx.EXPAND)
+        vbox1.Add(hbox2, proportion = 0, flag = wx.EXPAND)
         
         vbox1.Add(self.mainGrid, proportion = 1, flag = wx.EXPAND)
         
-        mainLayout.Add(vbox1, proportion = 1, flag = wx.EXPAND)
+        hbox1.Add(vbox1, proportion = 1, flag = wx.EXPAND)
+        
+        mainLayout.Add(hbox1, proportion = 1, flag = wx.EXPAND)
         
         panel.SetSizer(mainLayout)
         
