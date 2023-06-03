@@ -436,9 +436,9 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
 
-        toolbar.AddTool(wx.ID_BOLD, "Grassetto",  self.toolBarImage("bold.png"))
-        toolbar.AddTool(wx.ID_ITALIC, "Corsivo",  self.toolBarImage("corsivo.png"))
-        toolbar.AddTool(wx.ID_UNDERLINE, "Sottolineato",  self.toolBarImage("sottolineato.png"))
+        toolbar.AddCheckTool(wx.ID_BOLD, "Grassetto",  self.toolBarImage("bold.png"))
+        toolbar.AddCheckTool(wx.ID_ITALIC, "Corsivo",  self.toolBarImage("corsivo.png"))
+        toolbar.AddCheckTool(wx.ID_UNDERLINE, "Sottolineato",  self.toolBarImage("sottolineato.png"))
         
         toolbar.AddSeparator()
         
@@ -447,15 +447,15 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
         
-        toolbar.AddTool(wx.ID_JUSTIFY_LEFT, "Allinea a sinistra",  self.toolBarImage("alignleft.png"))
-        toolbar.AddTool(wx.ID_JUSTIFY_CENTER, "Allinea al centro",  self.toolBarImage("alignhorizontalcenter.png"))
-        toolbar.AddTool(wx.ID_JUSTIFY_RIGHT, "Allinea a destra",  self.toolBarImage("alignright.png"))
+        toolbar.AddRadioTool(wx.ID_JUSTIFY_LEFT, "Allinea a sinistra",  self.toolBarImage("alignleft.png"))
+        toolbar.AddRadioTool(wx.ID_JUSTIFY_CENTER, "Allinea al centro",  self.toolBarImage("alignhorizontalcenter.png"))
+        toolbar.AddRadioTool(wx.ID_JUSTIFY_RIGHT, "Allinea a destra",  self.toolBarImage("alignright.png"))
         
         toolbar.AddSeparator()
         
-        toolbar.AddTool(ID_AllineaInAlto, "Allinea a sinistra",  self.toolBarImage("aligntop.png"))
-        toolbar.AddTool(ID_AllineaAlCentroVerticalmente, "Allinea al centro",  self.toolBarImage("alignverticalcenter.png"))
-        toolbar.AddTool(ID_AllineaInBasso, "Allinea a destra",  self.toolBarImage("alignbottom.png"))
+        toolbar.AddRadioTool(ID_AllineaInAlto, "Allinea a sinistra",  self.toolBarImage("aligntop.png"))
+        toolbar.AddRadioTool(ID_AllineaAlCentroVerticalmente, "Allinea al centro",  self.toolBarImage("alignverticalcenter.png"))
+        toolbar.AddRadioTool(ID_AllineaInBasso, "Allinea a destra",  self.toolBarImage("alignbottom.png"))
         
         toolbar.Realize()
         return
