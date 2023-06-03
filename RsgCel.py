@@ -42,6 +42,11 @@ ID_Documentazione=32
 ID_Rinomina=33
 ID_Donazioni=34
 
+ID_SelezionaColoreSfondo = 35
+ID_AllineaInAlto = 36
+ID_AllineaAlCentroVerticalmente = 37
+ID_AllineaInBasso = 38
+
 class Finestra(wx.Frame):
 
     def __init__(self):
@@ -431,11 +436,34 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
 
-        toolbar.AddTool(wx.ID_BOLD, "Grassetto",  wx.Bitmap("bold.png"))
-        toolbar.AddTool(wx.ID_ITALIC, "Corsivo",  wx.Bitmap("corsivo.png"))
+        toolbar.AddTool(wx.ID_BOLD, "Grassetto",  self.toolBarImage("bold.png"))
+        toolbar.AddTool(wx.ID_ITALIC, "Corsivo",  self.toolBarImage("corsivo.png"))
+        toolbar.AddTool(wx.ID_UNDERLINE, "Sottolineato",  self.toolBarImage("sottolineato.png"))
+        
+        toolbar.AddSeparator()
+        
+        toolbar.AddTool(wx.ID_SELECT_COLOR, "Colore carattere",  self.toolBarImage("coloreFont.png"))
+        toolbar.AddTool(ID_SelezionaColoreSfondo, "Colore carattere",  self.toolBarImage("backgroundcolor.png"))
+        
+        toolbar.AddSeparator()
+        
+        toolbar.AddTool(wx.ID_JUSTIFY_LEFT, "Allinea a sinistra",  self.toolBarImage("alignleft.png"))
+        toolbar.AddTool(wx.ID_JUSTIFY_CENTER, "Allinea al centro",  self.toolBarImage("alignhorizontalcenter.png"))
+        toolbar.AddTool(wx.ID_JUSTIFY_RIGHT, "Allinea a destra",  self.toolBarImage("alignright.png"))
+        
+        toolbar.AddSeparator()
+        
+        toolbar.AddTool(ID_AllineaInAlto, "Allinea a sinistra",  self.toolBarImage("aligntop.png"))
+        toolbar.AddTool(ID_AllineaAlCentroVerticalmente, "Allinea al centro",  self.toolBarImage("alignverticalcenter.png"))
+        toolbar.AddTool(ID_AllineaInBasso, "Allinea a destra",  self.toolBarImage("alignbottom.png"))
         
         toolbar.Realize()
         return
+    
+    #Prendo l'immagine grande e la rimpicciolisco a 24x24 tenendo una altra qualitò
+    def toolBarImage(self, imagePath):
+        image = wx.Bitmap(imagePath).ConvertToImage()
+        return image.Scale(24, 24, quality = wx.IMAGE_QUALITY_HIGH)
 
     # in questa funzione aggiungeremo la statusbar
     def creaStatusbar(self):
