@@ -460,7 +460,7 @@ class Finestra(wx.Frame):
         toolbar.Realize()
         return
     
-    #Prendo l'immagine grande e la rimpicciolisco a 24x24 tenendo una altra qualitò
+    #Prendo l'immagine grande e la rimpicciolisco a 24x24 tenendo una altra qualità
     def toolBarImage(self, imagePath):
         image = wx.Bitmap(imagePath).ConvertToImage()
         return image.Scale(24, 24, quality = wx.IMAGE_QUALITY_HIGH)
