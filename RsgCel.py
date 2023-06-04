@@ -584,7 +584,7 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_TIMER, self.aggiornaStatusBarSalvataggio, self.timer)
         return
     
-    def funzioneChiudi(self,evt): #CLEAR NON FUNZIONA DA RIVEDERE
+    def funzioneChiudi(self,evt):
         dial = wx.MessageDialog(None, "Vuoi salvare prima di chiudere il foglio di calcolo?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
         risposta = dial.ShowModal()
         if risposta == wx.ID_YES:
@@ -641,6 +641,7 @@ class Finestra(wx.Frame):
         self.Destroy()
         return
     
+    #Ricavo le celle dalla cellCoordsList e da esse ne prendo i valori e li sommo
     def calcoloSomma(self, cellCoordsList:list) -> str:
         listaValori = []
         for a in cellCoordsList:
@@ -665,6 +666,7 @@ class Finestra(wx.Frame):
                 somma = int(somma)
         return str(somma)
     
+    #Ricavo le celle dalla cellCoordsList e da esse ne prendo i valori e li sottraggo
     def calcoloSottrazione(self, cellCoordsList:list) -> str:
         listaValori = []
         for a in cellCoordsList:
@@ -687,6 +689,7 @@ class Finestra(wx.Frame):
         
         return str(sottrazione)
     
+    #Ricavo le celle dalla cellCoordsList e da esse ne prendo i valori e li moltiplico
     def calcoloMoltiplicazione(self, cellCoordsList:list) -> str:
         listaValori = []
         
@@ -717,6 +720,7 @@ class Finestra(wx.Frame):
             return str(stringa * moltiplicazione)
         return str(moltiplicazione)
     
+    #Ricavo le celle dalla cellCoordsList e da esse ne prendo i valori e li divido
     def calcoloDivisione(self, cellCoordsList:list) -> str:
         listaValori = []
         for a in cellCoordsList:
@@ -739,12 +743,14 @@ class Finestra(wx.Frame):
         
         return str(divisione)
     
+    #Ricavo le celle dalla cellCoordsList e da esse ne prendo i valori e ne calcolo la media
     def calcoloMedia(self, cellCoordsList:list) -> str:
         media = float(self.calcoloSomma(cellCoordsList)) / len(cellCoordsList)
         if int(media) == media:
             return str(int(media))
         return str(media)
     
+    #Ricavo le celle dalla cellCoordsList e da esse ne prendo i valori e trovo il maggiore
     def calcoloMax(self, cellCoordsList:list) -> str:
         listaValori = []
         for a in cellCoordsList:
@@ -764,7 +770,8 @@ class Finestra(wx.Frame):
             massimo = int(massimo)
         
         return str(massimo)
-
+    
+    #Ricavo le celle dalla cellCoordsList e da esse ne prendo i valori e trovo il minore
     def calcoloMin(self, cellCoordsList:list) -> str:
         listaValori = []
         for a in cellCoordsList:
@@ -785,12 +792,15 @@ class Finestra(wx.Frame):
         
         return str(minimo)
     
+    #Tramite l'utilizzo della funzione alfanumericToNumberCellCoords trasformo una lista di celle da alfanumeriche[A2, C37] a numeriche[(0, 1), (2, 36)]
     def alfanumericCellsListToCoordCellList(self, listaCelle:list) -> list:
         listaCoordsCelle = []
         for a in listaCelle:
             listaCoordsCelle.append(self.alfanumericToNumberCellCoord(a))
         return listaCoordsCelle
     
+    #Trasfonro una strnga che indica una cella da alfanumerica(A2) a numerica(0, 1)
+    #Per fare ciò scorro le colonne e cerco quella che ha l'etichetta uguale a quella che mi è stata passata
     def alfanumericToNumberCellCoord(self, stringa:str) -> tuple:
         for a in stringa:
             if a.isnumeric():
@@ -806,6 +816,7 @@ class Finestra(wx.Frame):
         rowNumber = tupla[1] + tupla[2]
         return (int(rowNumber) - 1, int(colNumber))
     
+    #Prendo il valore scritto, lo trasformo in coordinate numeriche e vado alla cella
     def aggiornaPos(self, evt):
         value = evt.GetEventObject().GetValue()
         (row, col) = self.alfanumericToNumberCellCoord(value)
@@ -814,6 +825,7 @@ class Finestra(wx.Frame):
         evt.Skip()
         return
     
+    #Prendo il testo scritto dall'utente nella TextCtrl e lo "incollo" nella cella
     def aggiornaCella(self, evt):
         if evt.GetEventObject().IsModified():
             self.deviSalvare = True
@@ -825,6 +837,7 @@ class Finestra(wx.Frame):
                 self.mainGrid.SetCellValue(row, col, cont)
         return
     
+    #Quando viene rimosso il Focus dalla TextCtrl  faccio operazioni se la cella ne ha
     def operazioniOnLostFocus(self, evt):
         if evt.GetEventObject().IsModified():
             row = self.mainGrid.GetGridCursorRow()
@@ -835,7 +848,7 @@ class Finestra(wx.Frame):
             self.cellaOperazione(row, col)
         return
         
-    
+    #Alla rimozione dell'editor faccio le operazioni presenti nella cella
     def editorNascosto(self, evt):
         row = evt.GetRow()
         col = evt.GetCol()
@@ -846,6 +859,7 @@ class Finestra(wx.Frame):
             self.operazioni(row, col)
         return
     
+    #Alla creazione dell'editor se nella cella ci sono operazioni le mostro per intero
     def editorMostrato(self, evt):
         row = evt.GetRow()
         col = evt.GetCol()
@@ -854,6 +868,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellValue(row, col, cont)
         return
     
+    #Quando viene spostato il cursore aggiorno la seconda ToolBar e le due TextCtrl
     def cursoreSpostato(self, evt):
         row = evt.GetRow()
         col = evt.GetCol()
@@ -864,6 +879,7 @@ class Finestra(wx.Frame):
         self.aggiornaToolBar(evt, row, col)
         return
     
+    #Aggiorno la ToolBar con lo stile della cella selezionata
     def aggiornaToolBar(self, evt, row, col):
         font = self.mainGrid.GetCellFont(row, col)
         toolbar = self.FindWindowById(-31990)
@@ -902,6 +918,7 @@ class Finestra(wx.Frame):
         toolbar.Realize()
         return
     
+    #Aggiorno le ComboBox di Font e dimensioneFont della ToolBar con lo stile della cella selezionata
     def aggiornaComboBoxToolbar(self, evt, row, col):
         fontString = str(self.mainGrid.GetCellFont(row, col).GetNativeFontInfo()).split(";")[-1]
         self.carattereComboBox.SetValue(fontString)
@@ -910,12 +927,14 @@ class Finestra(wx.Frame):
         self.grandezzaComboBox.SetValue(str(fontDimension))
         return
     
+    #Prendo row e col e le passo alla funzione che aggiorna la TextCtrl che indica in che cella è il cursore
     def aggiornaIndicatorePos(self, evt):
         row = evt.GetRow()
         col = evt.GetCol()
         self.aggiornaComboBox(row, col)
         return
     
+    #Aggiorno la TextCtrl che mi dice il contenuto della cella
     def cellaInCambiamento(self, evt):
 #         self.deviSalvare = True
 #         self.statusBar.SetStatusText("Non salvato")
@@ -925,6 +944,7 @@ class Finestra(wx.Frame):
         self.barraCella.SetValue(cont)
         return
     
+    #Aggiorno la TextCtrl che dice il contenuto della cella quando la cella viene selezionata mostrando per intero le operazioni se ci sono
     def aggiornaBarraCella(self, row, col, cont):
         cella = (row, col)
         for a in self.somma:
@@ -965,6 +985,7 @@ class Finestra(wx.Frame):
         self.barraCella.SetValue(cont)
         return cont
     
+    #Aggionro StatusBar e controllo eventuali operazioni, se ci sono o la cella fa parte di un operazione ricalcolo il valore
     def cellaCambiata(self, evt):
         self.deviSalvare = True
         self.statusBar.SetStatusText("Non salvato")
@@ -977,11 +998,13 @@ class Finestra(wx.Frame):
         evt.Skip()
         return
     
+    #Aggiorno la prima TextCtrl con la posizione alfanumerica(A35) della cella Selezionata
     def aggiornaComboBox(self, row, col):
         cella = str(self.mainGrid.GetColLabelValue(col)) + str(row + 1)
         self.indicatoreCelle.SetValue(cella)
         return
     
+    #La cella fa parte di un'operazione: la calcolo
     def cellaOperazione(self, row:int, col:int) -> None:
         cella = (row, col)
         for a in self.somma:
@@ -1018,7 +1041,8 @@ class Finestra(wx.Frame):
             for b in self.minimo[a]:
                 if b == cella:
                     self.operazioni(a[0], a[1], main = False, op = "MIN")
-            
+    
+    #La cella contiene un'operazione: la calcolo        
     def operazioni(self, row:int, col:int, main = True, op = "") -> None:
         cont = self.mainGrid.GetCellEditor(row, col).GetValue()
         cont = cont.replace("=", "")
@@ -1137,6 +1161,7 @@ class Finestra(wx.Frame):
             return stringa
         return ""
     
+    #Creo l'intera operazione partendo dal risultato e dal tipo di operazione e dalle celle che ne fanno parte
     def creaContenutoOperazione(self, cellCoordsList, segno):
         listaCelle = []
         for a in cellCoordsList:
@@ -1154,7 +1179,6 @@ class Finestra(wx.Frame):
             cont = "=MIN(" + ";".join(listaCelle) + ")"
         return cont
                 
-    
     def cellDictFromFileString(self, stringa:str) -> dict:
         """Prendo i valori dalla stringa fornita e li separo per metterli poi nel dizionario"""
         if stringa != "vuoto\n":
@@ -1196,12 +1220,14 @@ class Finestra(wx.Frame):
             return dizionario
         return
     
+    #Aggiorno la parte della StatusBar riguardante il salvataggio una volta scomparsa la scritta di SALVATAGGIO COMPLETATAO
     def aggiornaStatusBarSalvataggio(self, evt):
         if self.deviSalvare:
             self.statusBar.SetStatusText("Non salvato")
         else:
             self.statusBar.SetStatusText("Salvato")
-        
+    
+    #Funzione geerale per salvare. Tramite l'ausilio di altre funzioni trasforma tutto in stringa e scrive sul file
     def salva(self, stringaFile = "", copia = False, saveAs = False): #Se gli passi il contenuto del file(di default "") puoi usarla anche per salva normale
         # Celle
         #      row, col, cont, textColour, Colour, alignment
@@ -1333,6 +1359,7 @@ class Finestra(wx.Frame):
         
         return
     
+    #Funzione apri colleghata al bottone, richiede quale File aprire e controlla se aprirlo su un'altra finestra
     def funzioneApri(self,evt):
         dlg = wx.FileDialog(None, "Apri File", style=wx.FD_OPEN, wildcard="RsgCel files (*.xlrsg)|*.xlrsg")
         if dlg.ShowModal() == wx.ID_CANCEL:
@@ -1352,6 +1379,7 @@ class Finestra(wx.Frame):
         self.apri(filePath)
         return
     
+    #Funzione generale per aprire, legge il file a mette tutto nella griglia
     def apri(self, path):
         self.percorso = path
     
