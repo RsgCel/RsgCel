@@ -191,7 +191,6 @@ class Finestra(wx.Frame):
         customItemBarraStato = wx.MenuItem(viewMenu, ID_BarStato, "Barra di stato")
         customItemBarraLat = wx.MenuItem(viewMenu, ID_BarLat, "Barra laterale")
         customItemStili = wx.MenuItem(viewMenu, ID_Stili, "Stili")
-        customItemGalleria = wx.MenuItem(viewMenu, ID_Gal, "Galleria")
         customItemNavigatore = wx.MenuItem(viewMenu, ID_Nav, "Navigatore")
         customItemListaFunzioni = wx.MenuItem(viewMenu, ID_ListaFun, "Lista funzioni")
         customItemSorgenteDati = wx.MenuItem(viewMenu, ID_SorDati, "Sorgente dati")
