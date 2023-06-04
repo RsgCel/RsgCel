@@ -1,4 +1,4 @@
-#Gramazio Rocco & Ristè Thatiely & Solfanelli Davide
+#Gramazio Rocco  & Solfanelli Davide
 #4AS
 #EsFinale
 
