@@ -1485,15 +1485,33 @@ class Finestra(wx.Frame):
         return
     
     def funzioneCollegamento(self, evt):
+        dialog=wx.TextEntryDialog(None, "inserisci l'URL per il collegamento", "Domanda", "")
+        if dialog.ShowModal() == wx.ID_OK:
+            url = dialog.GetValue()
+            open_webpage(url)
+        dialog.Destroy()
         return
-
     
     def funzioneData(self, evt):
-        #now = wx.DateTime.Now()
-        #date = now.FormatDate()
+        rows = self.mainGrid.GetNumberRows()
+        cols = self.mainGrid.GetNumberCols()
+        oggi = datetime.date.today()
+        data = oggi.strftime("%d/%m/%Y")
+        for row in range(rows):
+            for col in range(cols):
+                if self.mainGrid.IsInSelection(row, col):
+                    self.mainGrid.SetCellValue(row, col,data)
         return
     
     def funzioneOra(self, evt):
+        rows = self.mainGrid.GetNumberRows()
+        cols = self.mainGrid.GetNumberCols()
+        adesso = datetime.datetime.now()
+        orario = adesso.strftime("%H:%M:%S")
+        for row in range(rows):
+            for col in range(cols):
+                if self.mainGrid.IsInSelection(row, col):
+                    self.mainGrid.SetCellValue(row, col, orario)
         return
     
     # Funzioni Formato
