@@ -451,15 +451,19 @@ class Finestra(wx.Frame):
         return
     
     def creaToolbar2(self, toolbar):
-        caratereComboBox = wx.ComboBox(toolbar, size = (185, -1))
-        toolbar.AddControl(caratereComboBox)
+        listaFont = self.funzioneFontList()
+        self.carattereComboBox = wx.ComboBox(toolbar, size = (185, -1), value = "Segoe UI", choices = listaFont)
+        self.carattereComboBox.Bind(wx.EVT_COMBOBOX, self.funzioneCambiaFont)
+        toolbar.AddControl(self.carattereComboBox)
         
         spazioVuoto = wx.StaticText(toolbar, size = (9, -1))
         toolbar.AddControl(spazioVuoto)
         
-        
-        grandezzaComboBox = wx.ComboBox(toolbar, size = (60, -1))
-        toolbar.AddControl(grandezzaComboBox)
+        self.listaGrandezze = ["1", "2", "3", "4", "5", "9", "10", "15", "20", "25", "30", "40", "50", "60", "70", "90"]
+        self.grandezzaComboBox = wx.ComboBox(toolbar, size = (60, -1), choices = self.listaGrandezze, value = "9")
+        self.grandezzaComboBox.Bind(wx.EVT_COMBOBOX, self.funzioneCambiaDimensioniFont)
+        self.grandezzaComboBox.Bind(wx.EVT_TEXT, self.funzioneScriviDimensioneFont)
+        toolbar.AddControl(self.grandezzaComboBox)
         
         toolbar.AddSeparator()
 
@@ -470,7 +474,7 @@ class Finestra(wx.Frame):
         toolbar.AddSeparator()
         
         toolbar.AddTool(wx.ID_SELECT_COLOR, "Colore carattere",  self.toolBarImage("coloreFont.png"))
-        toolbar.AddTool(ID_SelezionaColoreSfondo, "Colore carattere",  self.toolBarImage("backgroundcolor.png"))
+        toolbar.AddTool(ID_SelezionaColoreSfondo, "Colore sfondo",  self.toolBarImage("backgroundcolor.png"))
         
         toolbar.AddSeparator()
         
@@ -480,11 +484,26 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
         
-        toolbar.AddRadioTool(ID_AllineaInAlto, "Allinea a sinistra",  self.toolBarImage("aligntop.png"))
-        toolbar.AddRadioTool(ID_AllineaAlCentroVerticalmente, "Allinea al centro",  self.toolBarImage("alignverticalcenter.png"))
-        toolbar.AddRadioTool(ID_AllineaInBasso, "Allinea a destra",  self.toolBarImage("alignbottom.png"))
+        toolbar.AddRadioTool(ID_AllineaInAlto, "Allinea in alto",  self.toolBarImage("aligntop.png"))
+        toolbar.AddRadioTool(ID_AllineaAlCentroVerticalmente, "Allinea al centro verticale",  self.toolBarImage("alignverticalcenter.png"))
+        toolbar.AddRadioTool(ID_AllineaInBasso, "Allinea in basso",  self.toolBarImage("alignbottom.png"))
         
         toolbar.Realize()
+        
+        self.Bind(wx.EVT_TOOL, self.funzioneGrassetto, id = wx.ID_BOLD)
+        self.Bind(wx.EVT_TOOL, self.funzioneCorsivo, id = wx.ID_ITALIC)
+        self.Bind(wx.EVT_TOOL, self.funzioneSottolineato, id = wx.ID_UNDERLINE)
+        
+        self.Bind(wx.EVT_TOOL, self.funzioneColoreCarattere, id = wx.ID_SELECT_COLOR)
+        self.Bind(wx.EVT_TOOL, self.funzioneColoreSfondo, id = ID_SelezionaColoreSfondo)
+        
+        self.Bind(wx.EVT_TOOL, self.funzioneAllineaSinistra, id = wx.ID_JUSTIFY_LEFT)
+        self.Bind(wx.EVT_TOOL, self.funzioneAllineaCentro, id = wx.ID_JUSTIFY_CENTER)
+        self.Bind(wx.EVT_TOOL, self.funzioneAllineaDestra, id = wx.ID_JUSTIFY_RIGHT)
+        
+        self.Bind(wx.EVT_TOOL, self.funzioneAllineaAlto, id = ID_AllineaInAlto)
+        self.Bind(wx.EVT_TOOL, self.funzioneAllineaCentroVerticale, id = ID_AllineaAlCentroVerticalmente)
+        self.Bind(wx.EVT_TOOL, self.funzioneAllineaBasso, id = ID_AllineaInBasso)
         return
     
     #Prendo l'immagine grande e la rimpicciolisco a 24x24 tenendo una altra qualità
@@ -840,6 +859,54 @@ class Finestra(wx.Frame):
         cont = self.mainGrid.GetCellValue(row, col)
         self.aggiornaIndicatorePos(evt)
         self.aggiornaBarraCella(row, col, cont)
+        self.aggiornaComboBoxToolbar(evt, row, col)
+        self.aggiornaToolBar(evt, row, col)
+        return
+    
+    def aggiornaToolBar(self, evt, row, col):
+        font = self.mainGrid.GetCellFont(row, col)
+        toolbar = self.FindWindowById(-31990)
+        toolbar.GetToolByPos(4).Toggle(font.GetWeight() == wx.FONTWEIGHT_BOLD)
+        toolbar.GetToolByPos(5).Toggle(font.GetStyle() == wx.FONTSTYLE_ITALIC)
+        toolbar.GetToolByPos(6).Toggle(font.GetUnderlined())
+        
+        match self.mainGrid.GetCellAlignment(row, col)[0]:
+            case wx.ALIGN_LEFT:
+                toolbar.GetToolByPos(11).Toggle()
+                toolbar.GetToolByPos(12).Toggle(False)
+                toolbar.GetToolByPos(13).Toggle(False)
+            case wx.ALIGN_CENTRE:
+                toolbar.GetToolByPos(11).Toggle(False)
+                toolbar.GetToolByPos(12).Toggle()
+                toolbar.GetToolByPos(13).Toggle(False)
+            case wx.ALIGN_RIGHT:
+                toolbar.GetToolByPos(11).Toggle(False)
+                toolbar.GetToolByPos(12).Toggle(False)
+                toolbar.GetToolByPos(13).Toggle()
+        
+        match self.mainGrid.GetCellAlignment(row, col)[1]:
+            case wx.ALIGN_TOP:
+                toolbar.GetToolByPos(15).Toggle()
+                toolbar.GetToolByPos(16).Toggle(False)
+                toolbar.GetToolByPos(17).Toggle(False)
+            case wx.ALIGN_CENTRE:
+                toolbar.GetToolByPos(15).Toggle(False)
+                toolbar.GetToolByPos(16).Toggle()
+                toolbar.GetToolByPos(17).Toggle(False)
+            case wx.ALIGN_BOTTOM:
+                toolbar.GetToolByPos(15).Toggle(False)
+                toolbar.GetToolByPos(16).Toggle(False)
+                toolbar.GetToolByPos(17).Toggle()
+                
+        toolbar.Realize()
+        return
+    
+    def aggiornaComboBoxToolbar(self, evt, row, col):
+        fontString = str(self.mainGrid.GetCellFont(row, col).GetNativeFontInfo()).split(";")[-1]
+        self.carattereComboBox.SetValue(fontString)
+        
+        fontDimension = self.mainGrid.GetCellFont(row, col).GetPointSize()
+        self.grandezzaComboBox.SetValue(str(fontDimension))
         return
     
     def aggiornaIndicatorePos(self, evt):
@@ -900,7 +967,6 @@ class Finestra(wx.Frame):
     def cellaCambiata(self, evt):
         self.deviSalvare = True
         self.statusBar.SetStatusText("Non salvato")
-        #Qui andrebbero controllate se ci sono operazioni o se la cella cambiata può cambiare il valore di qualche altra
         row = evt.GetRow()
         col = evt.GetCol()
         cont = self.mainGrid.GetCellValue(row, col)
@@ -1638,6 +1704,136 @@ class Finestra(wx.Frame):
         self.mainGrid.SetFont(fontSelezionato) # Vedere come impostare il font nella griglia
 
         return
+    
+    #Seconda Toolbar
+    def funzioneCambiaFont(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        facename = evt.GetEventObject().GetValue()
+        font = self.mainGrid.GetCellFont(row, col)
+        font.SetFaceName(facename)
+        self.mainGrid.SetCellFont(row, col, font)
+        return
+    
+    def funzioneScriviDimensioneFont(self, evt):
+        if evt.GetEventObject().GetValue() not in self.listaGrandezze:
+            self.funzioneCambiaDimensioniFont(evt)
+        return
+    
+    def funzioneCambiaDimensioniFont(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        grandezzaFont = int(evt.GetEventObject().GetValue())
+        
+        font = self.mainGrid.GetCellFont(row, col)
+        font.SetPointSize(grandezzaFont)
+        self.mainGrid.SetCellFont(row, col, font)
+        return
+    
+    def funzioneGrassetto(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        if evt.GetEventObject().FindById(evt.GetId()).IsToggled():
+            font = self.mainGrid.GetCellFont(row, col)
+            font.SetWeight(wx.FONTWEIGHT_BOLD)
+            self.mainGrid.SetCellFont(row, col, font)
+        else:
+            font = self.mainGrid.GetCellFont(row, col)
+            font.SetWeight(wx.FONTWEIGHT_NORMAL)
+            self.mainGrid.SetCellFont(row, col, font)
+        return
+    
+    def funzioneCorsivo(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        if evt.GetEventObject().FindById(evt.GetId()).IsToggled():
+            font = self.mainGrid.GetCellFont(row, col)
+            font.SetStyle(wx.FONTSTYLE_ITALIC)
+            self.mainGrid.SetCellFont(row, col, font)
+        else:
+            font = self.mainGrid.GetCellFont(row, col)
+            font.SetStyle(wx.FONTSTYLE_NORMAL)
+            self.mainGrid.SetCellFont(row, col, font)
+        return
+    
+    def funzioneSottolineato(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        font = self.mainGrid.GetCellFont(row, col)
+        font.SetUnderlined(evt.GetEventObject().FindById(evt.GetId()).IsToggled())
+        self.mainGrid.SetCellFont(row, col, font)
+        return
+    
+    def funzioneColoreCarattere(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        dialog = wx.ColourDialog(self, wx.ColourData())
+        if dialog.ShowModal() != wx.ID_OK:
+            return
+
+        colore = dialog.GetColourData().GetColour()
+        self.mainGrid.SetCellTextColour(row, col, colore)
+        return
+    
+    def funzioneColoreSfondo(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        dialog = wx.ColourDialog(self, wx.ColourData())
+        if dialog.ShowModal() != wx.ID_OK:
+            return
+
+        colore = dialog.GetColourData().GetColour()
+        self.mainGrid.SetCellBackgroundColour(row, col, colore)
+        return
+    
+    def funzioneAllineaSinistra(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        self.mainGrid.SetCellAlignment(row, col, wx.ALIGN_LEFT, -1)
+        return
+    
+    def funzioneAllineaCentro(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        self.mainGrid.SetCellAlignment(row, col, wx.ALIGN_CENTRE, -1)
+        return
+    
+    def funzioneAllineaDestra(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        self.mainGrid.SetCellAlignment(row, col, wx.ALIGN_RIGHT, -1)
+        return
+    
+    def funzioneAllineaAlto(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        self.mainGrid.SetCellAlignment(row, col, -1, wx.ALIGN_TOP)
+        return
+    
+    def funzioneAllineaCentroVerticale(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        self.mainGrid.SetCellAlignment(row, col, -1, wx.ALIGN_CENTRE)
+        return
+    
+    def funzioneAllineaBasso(self, evt):
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        self.mainGrid.SetCellAlignment(row, col, -1, wx.ALIGN_BOTTOM)
+        return
+
+    def funzioneFontList(self):
+        enumerator = FontEnumerator()
+        wx.FontEnumerator.EnumerateFacenames(enumerator)
+        return enumerator.fontList
         
 #la classe ereditata da wx.Printout definisce il contenuto della stampa del foglio di calcolo
 class GridPrintout(wx.Printout):
@@ -1678,6 +1874,15 @@ class GridPrintout(wx.Printout):
 
         return False
 
+class FontEnumerator(wx.FontEnumerator):
+    def __init__(self):
+        wx.FontEnumerator.__init__(self)
+        self.fontList = []
+
+    # Override the OnFacename() method to handle each font found
+    def OnFacename(self, facename):
+        self.fontList.append(facename)
+        return True
 
 # ----------------------------------------
 if __name__ == "__main__":
