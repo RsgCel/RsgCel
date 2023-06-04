@@ -932,8 +932,6 @@ class Finestra(wx.Frame):
     
     #Aggiorno la TextCtrl che mi dice il contenuto della cella
     def cellaInCambiamento(self, evt):
-#         self.deviSalvare = True
-#         self.statusBar.SetStatusText("Non salvato")
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
         cont = self.mainGrid.GetCellEditor(row, col).GetValue()
