@@ -538,8 +538,6 @@ class Finestra(wx.Frame):
         mainLayout.Add(toolbar1, proportion = 0)
         mainLayout.Add(toolbar2, proportion = 0)
         
-        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        
         vbox1 = wx.BoxSizer(wx.VERTICAL)
         
         self.mainGrid = wx.grid.Grid(panel, style =  wx.TE_PROCESS_ENTER)
@@ -550,7 +548,7 @@ class Finestra(wx.Frame):
         self.mainGrid.Bind(wx.EVT_TEXT, self.cellaInCambiamento)
         self.mainGrid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.cursoreSpostato)
         
-        hbox2 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         
         self.indicatoreCelle = wx.TextCtrl(panel, size = (150, -1), value = "A1", style =  wx.TE_PROCESS_ENTER)
         staticTextVuota = wx.StaticText(panel, size = (25, -1))
@@ -560,17 +558,15 @@ class Finestra(wx.Frame):
         self.barraCella.Bind(wx.EVT_TEXT, self.aggiornaCella)
         self.barraCella.Bind(wx.EVT_KILL_FOCUS, self.operazioniOnLostFocus)
         
-        hbox2.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox2.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox2.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
         
-        vbox1.Add(hbox2, proportion = 0, flag = wx.EXPAND)
+        vbox1.Add(hbox1, proportion = 0, flag = wx.EXPAND)
         
         vbox1.Add(self.mainGrid, proportion = 1, flag = wx.EXPAND)
         
-        hbox1.Add(vbox1, proportion = 1, flag = wx.EXPAND)
-        
-        mainLayout.Add(hbox1, proportion = 1, flag = wx.EXPAND)
+        mainLayout.Add(vbox1, proportion = 1, flag = wx.EXPAND)
         
         panel.SetSizer(mainLayout)
         
