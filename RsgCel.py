@@ -3,6 +3,7 @@
 #EsFinale
 
 import wx, wx.grid
+import webbrowser
 
 APP_NAME = "RsgCel"
 EXTENSION = ".xlrsg"
@@ -47,6 +48,9 @@ ID_AllineaInAlto = 36
 ID_AllineaAlCentroVerticalmente = 37
 ID_AllineaInBasso = 38
 
+def open_webpage(url):
+    webbrowser.open(url)
+    
 class Finestra(wx.Frame):
 
     def __init__(self):
@@ -1524,20 +1528,25 @@ class Finestra(wx.Frame):
         dial = wx.MessageDialog(None, "Licenza: Open Source,programma disponibile per tutti", "Informazione Licenza", wx.OK | wx.ICON_INFORMATION)
         dial.ShowModal()
         return
+    
     def funzioneInfoRSG(self, evt):
         dial = wx.MessageDialog(None, "RSG Cel\nVersione: 1.0.0\nSviluppatori: Gramazio Rocco,Ristè Thatiely,Solfanelli Davide\nRSG Cel è un programma per fare fogli di calcolo", "Informazione RSG cel", wx.OK | wx.ICON_INFORMATION)
         dial.ShowModal()
         return
+    
     def funzioneAiuto(self, evt):
+        open_webpage("https://ti-aiuto.it/")
         return
+    
     def funzioneDocumentazione(self, evt):
+        open_webpage("https://support.microsoft.com/it-it/excel")
         return
+    
     def funzioneDonazione(self, evt):
         dial = wx.MessageDialog(None, "Sei sicuro di voler darci dei soldi?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
         risposta = dial.ShowModal()
         if risposta == wx.ID_YES:
-            return
-            
+            open_webpage("file:///C:/Users/Giovanni/Desktop/Nuova%20cartella/sito.html")
         elif risposta == wx.ID_NO:
             return
             
