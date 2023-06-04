@@ -4,7 +4,7 @@
 
 import wx, wx.grid
 import webbrowser
-
+import datetime
 APP_NAME = "RsgCel"
 EXTENSION = ".xlrsg"
 TITOLO_INIZIALE = "(Senza Titolo)"
@@ -1542,6 +1542,10 @@ class Finestra(wx.Frame):
         self.mainGrid.ClearGrid()
         return
     def funzioneRinomina(self,evt):
+        dlg = wx.TextEntryDialog(self, "nuovo titolo:", "inserisci titolo", self.GetTitle())
+        if dlg.ShowModal() == wx.ID_OK:
+            titolo = dlg.GetValue()
+            self.SetTitle( titolo + " - " + APP_NAME)
         return
     
     
