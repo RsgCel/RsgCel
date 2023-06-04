@@ -380,6 +380,7 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneListaFun, id=ID_ListaFun)
         self.Bind(wx.EVT_MENU, self.funzioneSorgenteDati, id=ID_SorDati)
         self.Bind(wx.EVT_MENU, self.funzioneSchermoIntero, id=ID_ScheInt)
+        self.Bind(wx.EVT_CHAR_HOOK, self.tastoPremuto)
         self.Bind(wx.EVT_MENU, self.funzioneZoom, id=ID_Zoom)
         
         # Bind Inserisci
@@ -1538,6 +1539,14 @@ class Finestra(wx.Frame):
         return
     
     def funzioneSchermoIntero(self, evt):
+        self.ShowFullScreen(True)
+        #se clicco esc si chiude la finestra
+        self.tastoPremuto(True)
+        return
+    def tastoPremuto(self, event):
+        #controllo se è stato cliccato esc e in tal caso chiudo la finestra
+        if  event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.Close()
         return
     
     def funzioneZoom(self, evt):
