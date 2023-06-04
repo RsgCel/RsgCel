@@ -1743,6 +1743,7 @@ class Finestra(wx.Frame):
         return
     
     #Seconda Toolbar
+    #Prendo il font selezionato e lo imposto per la cella dove si trova il cursore
     def funzioneCambiaFont(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1752,11 +1753,13 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellFont(row, col, font)
         return
     
+    #Prendo la dimensione del font scritta e la imposto per la cella dove si trova il cursore
     def funzioneScriviDimensioneFont(self, evt):
         if evt.GetEventObject().GetValue() not in self.listaGrandezze:
             self.funzioneCambiaDimensioniFont(evt)
         return
     
+    #Prendo la dimensione del font selezionata e la imposto per la cella dove si trova il cursore
     def funzioneCambiaDimensioniFont(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1768,6 +1771,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellFont(row, col, font)
         return
     
+    #Imposto il font della cella in grassetto se necessario
     def funzioneGrassetto(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1781,6 +1785,7 @@ class Finestra(wx.Frame):
             self.mainGrid.SetCellFont(row, col, font)
         return
     
+    #Imposto il font della cella in corsivo se necessario
     def funzioneCorsivo(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1794,6 +1799,7 @@ class Finestra(wx.Frame):
             self.mainGrid.SetCellFont(row, col, font)
         return
     
+    #Imposto il font della cella sottolineato se necessario
     def funzioneSottolineato(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1802,6 +1808,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellFont(row, col, font)
         return
     
+    #Chiedo all'utente un colore e lo imposto come colore del carattere per la cella dove è posizionato il cursore
     def funzioneColoreCarattere(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1814,6 +1821,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellTextColour(row, col, colore)
         return
     
+    #Chiedo all'utente un colore e lo imposto come colore di sfondo per la cella dove è posizionato il cursore
     def funzioneColoreSfondo(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1825,6 +1833,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellBackgroundColour(row, col, colore)
         return
     
+    #Imposto il font della cella come font allineato a sinistra
     def funzioneAllineaSinistra(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1832,6 +1841,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellAlignment(row, col, wx.ALIGN_LEFT, -1)
         return
     
+    #Imposto il font della cella come font allineato orizzontalmente al centro
     def funzioneAllineaCentro(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1839,6 +1849,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellAlignment(row, col, wx.ALIGN_CENTRE, -1)
         return
     
+    #Imposto il font della cella come font allineato a destra
     def funzioneAllineaDestra(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1846,6 +1857,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellAlignment(row, col, wx.ALIGN_RIGHT, -1)
         return
     
+    #Imposto il font della cella come font allineato in alto
     def funzioneAllineaAlto(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1853,6 +1865,7 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellAlignment(row, col, -1, wx.ALIGN_TOP)
         return
     
+    #Imposto il font della cella come font allineato verticalmente al centro
     def funzioneAllineaCentroVerticale(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
@@ -1860,13 +1873,15 @@ class Finestra(wx.Frame):
         self.mainGrid.SetCellAlignment(row, col, -1, wx.ALIGN_CENTRE)
         return
     
+    #Imposto il font della cella come font allineato in basso
     def funzioneAllineaBasso(self, evt):
         row = self.mainGrid.GetGridCursorRow()
         col = self.mainGrid.GetGridCursorCol()
         
         self.mainGrid.SetCellAlignment(row, col, -1, wx.ALIGN_BOTTOM)
         return
-
+    
+    #Prendo tutti i nomi del font grazie alla classe FontEnumerator
     def funzioneFontList(self):
         enumerator = FontEnumerator()
         wx.FontEnumerator.EnumerateFacenames(enumerator)
@@ -1911,12 +1926,13 @@ class GridPrintout(wx.Printout):
 
         return False
 
+#Creo una classe che eredita wx.FontEnumerator
 class FontEnumerator(wx.FontEnumerator):
     def __init__(self):
         wx.FontEnumerator.__init__(self)
         self.fontList = []
 
-    # Override the OnFacename() method to handle each font found
+    # Override del metodo OnFacename() per salvarmi una lista che è una variabile membro della classe tutti i font
     def OnFacename(self, facename):
         self.fontList.append(facename)
         return True
