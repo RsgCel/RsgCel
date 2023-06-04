@@ -1549,27 +1549,23 @@ class Finestra(wx.Frame):
     
     
     #Funzioni Dati
-        def funzioneOrdinaCresc(self,evt):
-            rows = self.mainGrid.GetNumberRows()
-            cols = self.mainGrid.GetNumberCols()
-            selected_words = []
-            for row in range(rows):
-                for col in range(cols):
-                    word = self.mainGrid.GetCellValue(row, col)
-                    if self.mainGrid.IsInSelection(row, col):
-                        selected_words.append((word, row, col))
-            selected_words.sort()# Ordino le parole selezionate in ordine crescent
-           # Ripulisco tutte le celle della griglia
-            for row in range(rows):
-                for col in range(cols):
-                    self.mainGrid.SetCellValue(row, col, "")
-            index = 0
-            for row in range(rows):
-                for col in range(cols):
-                    if self.mainGrid.IsInSelection(row, col):
-                        self.mainGrid.SetCellValue(row, col, selected_words[index][0])
-                        index += 1
-            return
+    def funzioneOrdinaCresc(self,evt):
+        rows = self.mainGrid.GetNumberRows()
+        cols = self.mainGrid.GetNumberCols()
+        selected_words = []
+        for row in range(rows):
+            for col in range(cols):
+                word = self.mainGrid.GetCellValue(row, col)
+                if self.mainGrid.IsInSelection(row, col):
+                    selected_words.append((word, row, col))
+        selected_words.sort()# Ordino le parole selezionate in ordine crescent
+        index = 0
+        for row in range(rows):
+            for col in range(cols):
+                if self.mainGrid.IsInSelection(row, col):
+                    self.mainGrid.SetCellValue(row, col, selected_words[index][0])
+                    index += 1
+        return
                            
     def funzioneOrdinaDecr(self,evt):
         rows = self.mainGrid.GetNumberRows()
@@ -1582,10 +1578,6 @@ class Finestra(wx.Frame):
                     selected_words.append((word, row, col))
         selected_words.sort()  # Ordino le parole selezionate in ordine crescente
         selected_words.reverse()  # Inverto l'ordine per ottenere l'ordinamento decrescente
-        for row in range(rows):
-            for col in range(cols):
-                self.mainGrid.SetCellValue(row, col, "")
-
         index = 0
         for row in range(rows):
             for col in range(cols):
