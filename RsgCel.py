@@ -12,7 +12,6 @@ TITOLO_INIZIALE = "(Senza Titolo)"
 ID_DOCRec = 1
 ID_SalvaNome = 2
 ID_SalvaCopia = 3
-ID_ImpSta = 4
 ID_Proprietà = 5
 ID_Ripeti = 6
 ID_Seleziona = 7
@@ -21,16 +20,13 @@ ID_BarFor = 9
 ID_BarStato = 10
 ID_BarLat = 11
 ID_Stili = 12
-ID_Gal = 13
 ID_Nav = 14
 ID_ListaFun = 15
 ID_SorDati = 16
 ID_ScheInt = 17
 ID_Zoom = 18
 ID_Img = 20
-ID_Funzione = 21
 ID_Collegamento = 22
-ID_CarSpeciale = 23
 ID_Data = 24
 ID_Ora = 25
 ID_Testo = 26
@@ -109,7 +105,6 @@ class Finestra(wx.Frame):
         customItemDOCRec = wx.MenuItem(fileMenu, ID_DOCRec, "Documenti recenti")
         customItemSalvaNome = wx.MenuItem(fileMenu, ID_SalvaNome, "Salva con nome ")
         customItemSalvaCopia = wx.MenuItem(fileMenu, ID_SalvaCopia, "Salva una copia")
-        customItemImpSta = wx.MenuItem(fileMenu, ID_ImpSta, "Impostazioni stampante")
         customItemProprietà = wx.MenuItem(fileMenu, ID_Proprietà, "Proprietà")
         
         newItem = wx.MenuItem(fileMenu,wx.ID_NEW,"Nuovo")
@@ -139,7 +134,6 @@ class Finestra(wx.Frame):
         stampaItem = wx.MenuItem(fileMenu, wx.ID_PRINT,"Stampa")
         stampaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_PRINT))
         fileMenu.Append(stampaItem)
-        fileMenu.Append(customItemImpSta)
         fileMenu.AppendSeparator()
         fileMenu.Append(customItemProprietà)
         fileMenu.AppendSeparator()
@@ -209,12 +203,6 @@ class Finestra(wx.Frame):
         viewMenu.AppendSeparator()
         viewMenu.Append(customItemBarraLat)
         viewMenu.Append(customItemStili)
-        oggettoImmagine = wx.Bitmap("galleria.png")
-        immagine = oggettoImmagine.ConvertToImage()
-        immagine.Rescale(30, 30)
-        customItemGalleria = wx.MenuItem(viewMenu, ID_Gal, "Galleria")
-        customItemGalleria.SetBitmap(immagine)
-        viewMenu.Append(customItemGalleria)
         viewMenu.Append(customItemNavigatore)
         viewMenu.Append(customItemListaFunzioni)
         viewMenu.Append(customItemSorgenteDati)
@@ -228,28 +216,34 @@ class Finestra(wx.Frame):
         insertMenu = wx.Menu()
         
         # Creazione Item menu Inserisci
-        customItemImg = wx.MenuItem(viewMenu, ID_Img, "Immagine")
-        customItemFunzione = wx.MenuItem(viewMenu, ID_Funzione, "Funzione")
-        customItemCollegamento = wx.MenuItem(viewMenu, ID_Collegamento, "Collegamento")
-        customItemCarattereSpeciale = wx.MenuItem(viewMenu, ID_CarSpeciale, "Carattere speciale")
-        customItemData = wx.MenuItem(viewMenu, ID_Data, "Data")
-        customItemOra = wx.MenuItem(viewMenu, ID_Ora, "Ora")
-        
+        oggettoImmagine = wx.Bitmap("galleria.png")
+        immagine = oggettoImmagine.ConvertToImage()
+        immagine.Rescale(23,23)
+        customItemImg= wx.MenuItem(insertMenu, ID_Img, "Immagine")
+        customItemImg.SetBitmap(immagine)
         insertMenu.Append(customItemImg)
         insertMenu.AppendSeparator()
-        insertMenu.Append(customItemFunzione)
-        insertMenu.AppendSeparator()
+        oggettoImmagine = wx.Bitmap("collegamento.png")
+        col = oggettoImmagine.ConvertToImage()
+        col.Rescale(23,23)
+        customItemCollegamento= wx.MenuItem(insertMenu,ID_Collegamento, "Collegamento")
+        customItemCollegamento.SetBitmap(col)
         insertMenu.Append(customItemCollegamento)
-        insertMenu.Append(customItemCarattereSpeciale)
         insertMenu.AppendSeparator()
-        insertMenu.Append(customItemData)
+        oggettoImg = wx.Bitmap("data.png")
+        data = oggettoImg.ConvertToImage()
+        data.Rescale(23,23)
+        DataItem = wx.MenuItem(insertMenu, ID_Data, "Data")
+        DataItem.SetBitmap(data)
+        insertMenu.Append(DataItem)
+
         oggettoImg = wx.Bitmap("ora.png")
         ora = oggettoImg.ConvertToImage()
-        ora.Rescale(27,27)
+        ora.Rescale(23,23)
         OraItem = wx.MenuItem(insertMenu, ID_Ora, "Ora")
         OraItem.SetBitmap(ora)
         insertMenu.Append(OraItem)
-        
+   
         mb.Append(insertMenu, '&Inserisci')
         
         # crea menu Formato
@@ -276,7 +270,12 @@ class Finestra(wx.Frame):
         pageMenu=wx.Menu()
         pageMenu.Append(wx.ID_NEW,"Apri nuovo foglio di lavoro")
         pageMenu.AppendSeparator()
-        pageMenu.Append(wx.ID_CLEAR,"Pulisci celle")
+        oggettoImmagine = wx.Bitmap("pulisci.png")
+        pulisci = oggettoImmagine.ConvertToImage()
+        pulisci.Rescale(23, 23)
+        pulisciCelle = wx.MenuItem(pageMenu, wx.ID_CLEAR,"Pulisci celle")
+        pulisciCelle.SetBitmap(pulisci)
+        pageMenu.Append(pulisciCelle)
         pageMenu.AppendSeparator()
         pageMenu.Append(ID_Rinomina,"Rinomina foglio")
         pageMenu.AppendSeparator()
@@ -286,8 +285,19 @@ class Finestra(wx.Frame):
         
         #Menù dati
         datiMenu=wx.Menu()
-        datiMenu.Append(wx.ID_SORT_ASCENDING,"Ordina in modo crescente")
-        datiMenu.Append(wx.ID_SORT_DESCENDING,"Ordina in modo decrescente")
+        oggettoImmagine = wx.Bitmap("az.png")
+        cr = oggettoImmagine.ConvertToImage()
+        cr.Rescale(23, 23)
+        Crescente = wx.MenuItem(datiMenu,wx.ID_SORT_ASCENDING,"Ordina in modo crescente")
+        Crescente.SetBitmap(cr)
+        datiMenu.Append(Crescente)
+        
+        oggettoImmagine = wx.Bitmap("za.png")
+        decr= oggettoImmagine.ConvertToImage()
+        decr.Rescale(23, 23)
+        Decrescente = wx.MenuItem(datiMenu,wx.ID_SORT_DESCENDING,"Ordina in modo decrescente")
+        Decrescente.SetBitmap(decr)
+        datiMenu.Append(Decrescente)
         
         mb.Append(datiMenu, '&Dati')
         
@@ -299,17 +309,35 @@ class Finestra(wx.Frame):
         
         #Menù finestra
         windowMenu = wx.Menu()
-        windowMenu.Append(wx.ID_NEW,"Apri nuova finestra")
-        windowMenu.Append(wx.ID_CLOSE,"Chiudi finestra")
+        oggettoImg = wx.Bitmap("newWindow.png")
+        new = oggettoImg.ConvertToImage()
+        new.Rescale(23,23)
+        newItem = wx.MenuItem(windowMenu, wx.ID_NEW,"Apri nuova finestra")
+        newItem.SetBitmap(new)
+        windowMenu.Append(newItem)
+        
+        closeItem = wx.MenuItem(windowMenu, wx.ID_CLOSE,"Chiudi finestra")
+        closeItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_CLOSE))
+        windowMenu.Append(closeItem)
         
         mb.Append(windowMenu, '&Finestra')
         
         #Menù Aiuto
-        helpMenu = wx.Menu()     
-        helpMenu.Append(ID_Aiuto, "Guida")
+        helpMenu = wx.Menu()
+        oggettoImg = wx.Bitmap("guida.png")
+        guida = oggettoImg.ConvertToImage()
+        guida.Rescale(27,27)
+        guidaItem = wx.MenuItem(helpMenu, ID_Aiuto,"Guida")
+        guidaItem.SetBitmap(guida)
+        helpMenu.Append(guidaItem)
         helpMenu.Append(ID_Documentazione, "Documentazione programma") 
         helpMenu.AppendSeparator()
-        helpMenu.Append(ID_Donazioni,"Donazione a RsgCel")
+        oggettoImg = wx.Bitmap("donazione.png")
+        dona = oggettoImg.ConvertToImage()
+        dona.Rescale(27,27)
+        donaItem = wx.MenuItem(helpMenu, ID_Donazioni,"Donazione a RsgCel")
+        donaItem.SetBitmap(dona)
+        helpMenu.Append(donaItem)
         helpMenu.AppendSeparator()
         helpMenu.Append(ID_InfoLic, "Informazioni licenza")
         helpMenu.AppendSeparator()
@@ -329,7 +357,6 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneSalvaConNome, id=ID_SalvaNome)
         self.Bind(wx.EVT_MENU, self.funzioneSalvaCopia, id=ID_SalvaCopia)
         self.Bind(wx.EVT_MENU, self.funzioneStampa, id=wx.ID_PRINT)
-        self.Bind(wx.EVT_MENU, self.funzioneImpostazioniStampante, id=ID_ImpSta)
         self.Bind(wx.EVT_MENU, self.funzioneProprietà, id=ID_Proprietà)
         self.Bind(wx.EVT_MENU, self.funzioneEsci, id=wx.ID_EXIT)
         
@@ -350,7 +377,6 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneBarraStato, id=ID_BarStato)
         self.Bind(wx.EVT_MENU, self.funzioneBarLat, id=ID_BarLat)
         self.Bind(wx.EVT_MENU, self.funzioneStili, id=ID_Stili)
-        self.Bind(wx.EVT_MENU, self.funzioneGal, id=ID_Gal)
         self.Bind(wx.EVT_MENU, self.funzioneNav, id=ID_Nav)
         self.Bind(wx.EVT_MENU, self.funzioneListaFun, id=ID_ListaFun)
         self.Bind(wx.EVT_MENU, self.funzioneSorgenteDati, id=ID_SorDati)
@@ -359,9 +385,7 @@ class Finestra(wx.Frame):
         
         # Bind Inserisci
         self.Bind(wx.EVT_MENU, self.funzioneImmagine, id=ID_Img)
-        self.Bind(wx.EVT_MENU, self.funzioneFunzione, id=ID_Funzione)
         self.Bind(wx.EVT_MENU, self.funzioneCollegamento, id=ID_Collegamento)
-        self.Bind(wx.EVT_MENU, self.funzioneCarattereSpeciale, id=ID_CarSpeciale)
         self.Bind(wx.EVT_MENU, self.funzioneData, id=ID_Data)
         self.Bind(wx.EVT_MENU, self.funzioneOra, id=ID_Ora)
         
@@ -1370,8 +1394,6 @@ class Finestra(wx.Frame):
         #prompt True così mostra la finestra di dialogo nella stampa
         printer.Print(self, printout, prompt=True)
     
-    def funzioneImpostazioniStampante(self, evt):
-        return
     
     def funzioneProprietà(self, evt):
         return
@@ -1435,9 +1457,6 @@ class Finestra(wx.Frame):
         
     def funzioneStili(self, evt):
         return
-    
-    def funzioneGal(self, evt):
-        return
         
     def funzioneNav(self, evt):
         return
@@ -1465,14 +1484,9 @@ class Finestra(wx.Frame):
         # Capire come inserire immagine nella griglia
         return
     
-    def funzioneFunzione(self, evt):
-        return
-    
     def funzioneCollegamento(self, evt):
         return
-    
-    def funzioneCarattereSpeciale(self, evt):
-        return
+
     
     def funzioneData(self, evt):
         #now = wx.DateTime.Now()
