@@ -454,9 +454,9 @@ class Finestra(wx.Frame):
         self.listaGrandezze=[]
         for n in range(1,100):
             self.listaGrandezze.append(str(n))
-        self.grandezzaComboBox = wx.ComboBox(toolbar, size = (60, -1), choices = self.listaGrandezze, value = "9")
+        self.grandezzaComboBox = wx.ComboBox(toolbar, size = (60, -1), choices = self.listaGrandezze, value = "9", style = wx.TE_PROCESS_ENTER)
         self.grandezzaComboBox.Bind(wx.EVT_COMBOBOX, self.funzioneCambiaDimensioniFont)
-        self.grandezzaComboBox.Bind(wx.EVT_TEXT, self.funzioneScriviDimensioneFont)
+        self.grandezzaComboBox.Bind(wx.EVT_TEXT_ENTER, self.funzioneScriviDimensioneFont)
         toolbar.AddControl(self.grandezzaComboBox)
         
         toolbar.AddSeparator()
@@ -1897,8 +1897,7 @@ class Finestra(wx.Frame):
     
     #Prendo la dimensione del font scritta e la imposto per la cella dove si trova il cursore
     def funzioneScriviDimensioneFont(self, evt):
-        if evt.GetEventObject().GetValue() not in self.listaGrandezze:
-            self.funzioneCambiaDimensioniFont(evt)
+        self.funzioneCambiaDimensioniFont(evt)
         return
     
     #Prendo la dimensione del font selezionata e la imposto per la cella dove si trova il cursore
