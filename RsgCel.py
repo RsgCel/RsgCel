@@ -10,7 +10,6 @@ APP_NAME = "RsgCel"
 EXTENSION = ".xlrsg"
 TITOLO_INIZIALE = "(Senza Titolo)"
 
-ID_DOCRec = 1
 ID_SalvaNome = 2
 ID_SalvaCopia = 3
 ID_Proprietà = 5
@@ -103,7 +102,6 @@ class Finestra(wx.Frame):
         fileMenu = wx.Menu()
         
         # Creazione Item Menu File
-        customItemDOCRec = wx.MenuItem(fileMenu, ID_DOCRec, "Documenti recenti")
         customItemSalvaNome = wx.MenuItem(fileMenu, ID_SalvaNome, "Salva con nome ")
         customItemSalvaCopia = wx.MenuItem(fileMenu, ID_SalvaCopia, "Salva una copia")
         customItemProprietà = wx.MenuItem(fileMenu, ID_Proprietà, "Proprietà")
@@ -114,7 +112,6 @@ class Finestra(wx.Frame):
         openItem = wx.MenuItem(fileMenu, wx.ID_OPEN,"Apri")
         openItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN))
         fileMenu.Append(openItem)
-        fileMenu.Append(customItemDOCRec)
         closeItem = wx.MenuItem(fileMenu, wx.ID_CLOSE,"Chiudi")
         closeItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_CLOSE))
         fileMenu.Append(closeItem)
@@ -344,7 +341,6 @@ class Finestra(wx.Frame):
         # Bind Menu File
         self.Bind(wx.EVT_MENU, self.funzioneNuovo, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU, self.funzioneApri, id=wx.ID_OPEN)
-        self.Bind(wx.EVT_MENU, self.funzioneDocumentiRecenti, id=ID_DOCRec)
         self.Bind(wx.EVT_MENU, self.funzioneChiudi, id=wx.ID_CLOSE)
         self.Bind(wx.EVT_MENU, self.funzioneRicarica, id=wx.ID_REFRESH)
         self.Bind(wx.EVT_MENU, self.funzioneSalva, id=wx.ID_SAVE)
@@ -1501,9 +1497,6 @@ class Finestra(wx.Frame):
         window.Show()
         (px,py) = self.GetPosition()
         window.Move(px + 50, py + 50)
-        return
-
-    def funzioneDocumentiRecenti(self, evt):
         return
 
     def funzioneRicarica(self, evt):
