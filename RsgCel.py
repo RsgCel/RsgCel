@@ -1788,16 +1788,6 @@ class Finestra(wx.Frame):
                     self.mainGrid.SetCellValue(row, col, orario)
         return
     
-    # Funzioni Formato
-    def funzioneTesto(self, evt):
-        return
-    
-    def funzioneSpaziatura(self, evt):
-        return
-    
-    def funzioneAllinea(self, evt):
-        return
-    
     #Funzioni Stili
     def funzioneSelFont(self,evt):
         datiIniziali = wx.FontData()
@@ -1866,11 +1856,11 @@ class Finestra(wx.Frame):
         return
     
     def funzioneAiuto(self, evt):
-        open_webpage("https://ti-aiuto.it/")
+        self.open_webpage("https://ti-aiuto.it/")
         return
     
     def funzioneDocumentazione(self, evt):
-        open_webpage("https://support.microsoft.com/it-it/excel")
+        self.open_webpage("https://support.microsoft.com/it-it/excel")
         return
     
     def funzioneDonazione(self, evt):
@@ -1878,7 +1868,7 @@ class Finestra(wx.Frame):
         risposta = dial.ShowModal()
         if risposta == wx.ID_YES:
             path = Path.cwd() / "sito.html"
-            open_webpage("file:///" + str(path))
+            self.open_webpage("file:///" + str(path))
         elif risposta == wx.ID_NO:
             return
             
