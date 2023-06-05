@@ -44,9 +44,6 @@ ID_SelezionaColoreSfondo = 35
 ID_AllineaInAlto = 36
 ID_AllineaAlCentroVerticalmente = 37
 ID_AllineaInBasso = 38
-
-def open_webpage(url):
-    webbrowser.open(url)
     
 class Finestra(wx.Frame):
 
@@ -1577,8 +1574,12 @@ class Finestra(wx.Frame):
         dialog=wx.TextEntryDialog(None, "inserisci l'URL per il collegamento", "Domanda", "")
         if dialog.ShowModal() == wx.ID_OK:
             url = dialog.GetValue()
-            open_webpage(url)
+            self.open_webpage(url)
         dialog.Destroy()
+        return
+    
+    def open_webpage(self, url):
+        webbrowser.open(url)
         return
     
     def funzioneData(self, evt):
@@ -1630,13 +1631,6 @@ class Finestra(wx.Frame):
     def funzionePulisciCelle(self,evt):
         self.mainGrid.ClearGrid()
         return
-    def funzioneRinomina(self,evt):
-        dlg = wx.TextEntryDialog(self, "nuovo titolo:", "inserisci titolo", self.GetTitle())
-        if dlg.ShowModal() == wx.ID_OK:
-            titolo = dlg.GetValue()
-            self.SetTitle( titolo + " - " + APP_NAME)
-        return
-    
     
     #Funzioni Dati
     def funzioneOrdinaCresc(self,evt):
