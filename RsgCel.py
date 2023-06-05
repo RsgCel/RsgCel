@@ -534,7 +534,7 @@ class Finestra(wx.Frame):
     def creaMainView(self):
         panel = wx.Panel(self)
         
-        mainLayout = wx.BoxSizer(wx.VERTICAL)
+        self.mainLayout = wx.BoxSizer(wx.VERTICAL)
         
         toolbar1 = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_NODIVIDER)
         self.creaToolbar(toolbar1)
@@ -542,18 +542,8 @@ class Finestra(wx.Frame):
         toolbar2 = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_NODIVIDER)
         self.creaToolbar2(toolbar2)
         
-        mainLayout.Add(toolbar1, proportion = 0)
-        mainLayout.Add(toolbar2, proportion = 0)
-        
-        vbox1 = wx.BoxSizer(wx.VERTICAL)
-        
-        self.mainGrid = wx.grid.Grid(panel, style =  wx.TE_PROCESS_ENTER)
-        self.mainGrid.CreateGrid(100, 100)
-        self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.cellaCambiata)
-        self.mainGrid.Bind(wx.grid.EVT_GRID_EDITOR_SHOWN, self.editorMostrato)
-        self.mainGrid.Bind(wx.grid.EVT_GRID_EDITOR_HIDDEN, self.editorNascosto)
-        self.mainGrid.Bind(wx.EVT_TEXT, self.cellaInCambiamento)
-        self.mainGrid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.cursoreSpostato)
+        self.mainLayout.Add(toolbar1, proportion = 0)
+        self.mainLayout.Add(toolbar2, proportion = 0)
         
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         
@@ -569,13 +559,65 @@ class Finestra(wx.Frame):
         hbox1.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
         hbox1.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
         
-        vbox1.Add(hbox1, proportion = 0, flag = wx.EXPAND)
+        self.mainLayout.Add(hbox1, proportion = 0, flag = wx.EXPAND)
         
-        vbox1.Add(self.mainGrid, proportion = 1, flag = wx.EXPAND)
+        self.mainGrid = wx.grid.Grid(panel, style =  wx.TE_PROCESS_ENTER)
+        self.mainGrid.CreateGrid(100, 100)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.cellaCambiata)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_EDITOR_SHOWN, self.editorMostrato)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_EDITOR_HIDDEN, self.editorNascosto)
+        self.mainGrid.Bind(wx.EVT_TEXT, self.cellaInCambiamento)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.cursoreSpostato)
         
-        mainLayout.Add(vbox1, proportion = 1, flag = wx.EXPAND)
+        self.mainLayout.Add(self.mainGrid, proportion = 1, flag = wx.EXPAND)
         
-        panel.SetSizer(mainLayout)
+        self.hboxSearch = wx.BoxSizer(wx.HORIZONTAL)
+        
+        btnCloseSearch = wx.Button(panel, size = (24, 24), style = wx.BORDER_NONE)
+        btnCloseSearch.SetBitmap(self.toolBarImage("SearchClose.png"))
+        btnCloseSearch.Bind(wx.EVT_BUTTON, self.funzioneChiudiTrova)
+        self.hboxSearch.Add(btnCloseSearch, proportion = 0, flag = wx.RIGHT | wx.LEFT, border = 5)
+        
+        self.tcSearch = wx.TextCtrl(panel, size = (200, -1))
+        self.hboxSearch.Add(self.tcSearch, proportion = 0, flag = wx.RIGHT, border = 5)
+        
+        btnPrecedente = wx.Button(panel, size = (24, 24), style = wx.BORDER_NONE)
+        btnPrecedente.Bind(wx.EVT_BUTTON, self.funzionePrecedente)
+        image = self.toolBarImage("freggiaGiu.png")
+        image = image.Mirror(False)
+        btnPrecedente.SetBitmap(image)
+        self.hboxSearch.Add(btnPrecedente, proportion = 0, flag = wx.RIGHT, border = 5)
+        
+        btnSuccessivo = wx.Button(panel, size = (24, 24), style = wx.BORDER_NONE)
+        btnSuccessivo.Bind(wx.EVT_BUTTON, self.funzioneSuccessivo)
+        btnSuccessivo.SetBitmap(self.toolBarImage("freggiaGiu.png"))
+        self.hboxSearch.Add(btnSuccessivo, proportion = 0, flag = wx.RIGHT, border = 5)
+        
+        btnSearch = wx.Button(panel, label = "Trova")
+        btnSearch.Bind(wx.EVT_BUTTON, self.funzioneTrovaCont)
+        self.hboxSearch.Add(btnSearch, proportion = 0, flag = wx.RIGHT, border = 5)
+        
+        self.mainLayout.Add(self.hboxSearch, proportion = 0, flag = wx.TOP | wx.BOTTOM, border = 5)
+        self.mainLayout.Show(self.hboxSearch, False)
+
+        self.hboxReplace = wx.BoxSizer(wx.HORIZONTAL)
+        
+        btnCloseReplace = wx.Button(panel, size = (24, 24), style = wx.BORDER_NONE)
+        btnCloseReplace.SetBitmap(self.toolBarImage("SearchClose.png"))
+        btnCloseReplace.Bind(wx.EVT_BUTTON, self.funzioneChiudiSostituisci)
+        self.hboxReplace.Add(btnCloseReplace, proportion = 0, flag = wx.RIGHT | wx.LEFT, border = 5)
+        
+        self.tcReplace = wx.TextCtrl(panel, size = (200, -1))
+        self.hboxReplace.Add(self.tcReplace, proportion = 0, flag = wx.RIGHT, border = 5)
+        
+        btnReplace = wx.Button(panel, label = "Sostituisci")
+        btnReplace.Bind(wx.EVT_BUTTON, self.funzioneSostituisciCont)
+        self.hboxReplace.Add(btnReplace, proportion = 0, flag = wx.RIGHT, border = 5)
+        
+        self.mainLayout.Add(self.hboxReplace, proportion = 0, flag = wx.TOP | wx.BOTTOM, border = 5)
+        self.mainLayout.Show(self.hboxReplace, False)
+        
+        panel.SetSizer(self.mainLayout)
         
         #icona
         icon = wx.Icon()
@@ -1543,16 +1585,120 @@ class Finestra(wx.Frame):
         self.mainGrid.SelectBlock(row, col, row, col, False)
         return
     
+    #Mostro la finestra di Ricerca
     def funzioneTrova(self, evt):
-        trovadial = wx.TextEntryDialog(None, "Cosa cerchi?", "Trova")
-        trovadial.ShowModal()
-        
+        self.mainLayout.Show(self.hboxSearch, True)
+        self.mainLayout.Layout()
         return
     
+    #Nascondo la finestra di ricerca
+    def funzioneChiudiTrova(self, evt):
+        self.mainLayout.Show(self.hboxSearch, False)
+        if self.mainLayout.IsShown(self.hboxReplace):
+            self.mainLayout.Show(self.hboxReplace, False)
+        self.mainLayout.Layout()
+        return
+    
+    #Cerco la parola da cercare cicliclando la griglia
+    #Trovata la parola posiziono lì il cursore
+    #Se non è presente apro una MessageDialog dicendo che non è presente
+    def funzioneTrovaCont(self, evt):
+        parolaDaCercare = self.tcSearch.GetValue()
+        cols = self.mainGrid.GetNumberCols()
+        rows = self.mainGrid.GetNumberRows()
+        interrompi = False
+        for row in range(rows):
+            for col in range(cols):
+                valoreCella = self.mainGrid.GetCellValue(row, col)
+                if parolaDaCercare in valoreCella:
+                    self.mainGrid.GoToCell(row, col)
+                    self.mainGrid.SetFocus()
+                    interrompi = True
+                    break
+            if interrompi:
+                break
+        else:
+            dial = wx.MessageDialog(None, "Parola " + parolaDaCercare + " non presente nella griglia", "Info", wx.OK | wx.CANCEL)
+            dial.ShowModal()
+        return
+    
+    #Cerco la parola da cercare cicliclando posizioni teoriche precedente a quella attuale
+    #Trovata la parola posiziono lì il cursore
+    def funzionePrecedente(self, evt):
+        parolaDaCercare = self.tcSearch.GetValue()
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        maxColNumber = self.mainGrid.GetNumberCols() - 1
+        maxRowNumber = self.mainGrid.GetNumberRows() - 1
+        while True:
+            col -= 1
+            if col < 0:
+                col = maxColNumber
+                row -= 1
+                if row < 0:
+                    dial = wx.MessageDialog(None, "È stata raggiunto l'inizio del foglio senza trovare la parola", "Info", wx.OK | wx.CANCEL)
+            dial.ShowModal()
+            
+            valoreCella = self.mainGrid.GetCellValue(row, col)
+            if parolaDaCercare in valoreCella:
+                self.mainGrid.GoToCell(row, col)
+                self.mainGrid.SetFocus()
+                break
+        return
+    
+    #Cerco la parola da cercare cicliclando posizioni teoriche successive a quella attuale
+    #Trovata la parola posiziono lì il cursore
+    def funzioneSuccessivo(self, evt): #numero totale - 1
+        parolaDaCercare = self.tcSearch.GetValue()
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        maxColNumber = self.mainGrid.GetNumberCols()
+        maxRowNumber = self.mainGrid.GetNumberRows()
+        while True:
+            col += 1
+            if col >= maxColNumber:
+                col = 0
+                row += 1
+                if row >= maxRowNumber:
+                    dial = wx.MessageDialog(None, "È stata raggiunta la fine del foglio senza trovare la parola", "Info", wx.OK | wx.CANCEL)
+                    dial.ShowModal()
+                    break
+            
+            valoreCella = self.mainGrid.GetCellValue(row, col)
+            if parolaDaCercare in valoreCella:
+                self.mainGrid.GoToCell(row, col)
+                self.mainGrid.SetFocus()
+                break
+        return
+    
+    #Mostro la finestra di ricerca e sostituzione
     def funzioneTrovaeSostituisci(self, evt):
-        trovaEsosdial = wx.FindReplaceDialog(None, "Trova e Sostituisci") # Manca qualcosa (data)
-        trovaEsosdial.ShowModal()
-        
+        self.mainLayout.Show(self.hboxSearch, True)
+        self.mainLayout.Show(self.hboxReplace, True)
+        self.mainLayout.Layout()
+        return
+    
+    #Nascondo la finestra di ricerca e sostituzione
+    def funzioneChiudiSostituisci(self, evt):
+        self.mainLayout.Show(self.hboxReplace, False)
+        self.mainLayout.Show(self.hboxSearch, False)
+        self.mainLayout.Layout()
+        return
+    
+    #Prendo il contenuto della cella attuale e sostituisco la parola da sostituire con quella data
+    #Se nella cella attuale non vi è la parola da sostituire apro una messageDialog che avvisa della mancanza
+    def funzioneSostituisciCont(self, evt):
+        parolaDaCercare = self.tcSearch.GetValue()
+        parolaDaSostituire = self.tcReplace.GetValue()
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        contCella = self.mainGrid.GetCellValue(row, col)
+        if parolaDaCercare in contCella:
+            contCella = contCella.replace(parolaDaCercare, parolaDaSostituire)
+            self.mainGrid.SetCellValue(row, col, contCella)
+        else:
+            dial = wx.MessageDialog(None, "La parola " + parolaDaCercare + " non è presente nella cella selezionata", "Info", wx.OK | wx.CANCEL)
+            dial.ShowModal()
         return
     
     # Funzioni Visualizza
