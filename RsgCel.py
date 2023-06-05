@@ -5,6 +5,7 @@
 import wx, wx.grid
 import webbrowser
 import datetime
+from pathlib import Path
 APP_NAME = "RsgCel"
 EXTENSION = ".xlrsg"
 TITOLO_INIZIALE = "(Senza Titolo)"
@@ -1715,7 +1716,8 @@ class Finestra(wx.Frame):
         dial = wx.MessageDialog(None, "Sei sicuro di voler darci dei soldi?", "Domanda", wx.YES_NO | wx.CANCEL | wx.ICON_QUESTION)
         risposta = dial.ShowModal()
         if risposta == wx.ID_YES:
-            open_webpage("file:///C:/Users/Giovanni/Desktop/Nuova%20cartella/sito.html")
+            path = Path.cwd() / "sito.html"
+            open_webpage("file:///" + str(path))
         elif risposta == wx.ID_NO:
             return
             
