@@ -292,12 +292,6 @@ class Finestra(wx.Frame):
         
         mb.Append(datiMenu, '&Dati')
         
-        #Menù strumenti
-        strMenu=wx.Menu()
-        strMenu.Append(wx.ID_SPELL_CHECK,"Controllo ortografico")
-        
-        mb.Append(strMenu, '&Strumenti')
-        
         #Menù finestra
         windowMenu = wx.Menu()
         oggettoImg = wx.Bitmap("newWindow.png")
@@ -389,9 +383,6 @@ class Finestra(wx.Frame):
         #Bind Dati
         self.Bind(wx.EVT_MENU, self.funzioneOrdinaCresc,id=wx.ID_SORT_ASCENDING)
         self.Bind(wx.EVT_MENU, self.funzioneOrdinaDecr,id=wx.ID_SORT_DESCENDING)
-        
-        #Bind Strumenti
-        self.Bind(wx.EVT_MENU, self.funzioneCheckOrto,id=wx.ID_SPELL_CHECK)
         
         # Bind Help
         self.Bind(wx.EVT_MENU, self.funzioneInfoLic, id=ID_InfoLic)
@@ -1860,10 +1851,6 @@ class Finestra(wx.Frame):
                 if self.mainGrid.IsInSelection(row, col):
                     self.mainGrid.SetCellValue(row, col, selected_words[index][0])
                     index += 1
-        return
-    
-    #Funzioni Strumenti
-    def funzioneCheckOrto(self,evt):
         return
  
     # Funzioni Aiuto
