@@ -1692,12 +1692,10 @@ class Finestra(wx.Frame):
     # Funzioni Visualizza
     def funzioneSchermoIntero(self, evt):
         self.ShowFullScreen(True)
-        #se clicco esc si chiude la finestra
-#         self.tastoPremuto(True)
         return
     def tastoPremuto(self, event):
         #controllo se è stato cliccato esc e in tal caso chiudo la finestra
-        if  event.GetKeyCode() == wx.WXK_ESCAPE:
+        if event.GetKeyCode() == wx.WXK_ESCAPE:
             self.ShowFullScreen(False)
         event.Skip()
         return
