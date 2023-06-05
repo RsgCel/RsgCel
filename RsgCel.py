@@ -417,17 +417,11 @@ class Finestra(wx.Frame):
         toolbar.AddTool(ID_TrovaESos, "Trova e sostituisci",  wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE))
         
         toolbar.AddSeparator()
-        
-        oggettoImmagine = wx.Bitmap("collegamento.png")
-        col = oggettoImmagine.ConvertToImage()
-        col = col.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
-        toolbar.AddTool(ID_Collegamento, "Collegamento", col)
        
         oggettoImmagine = wx.Bitmap("az.png")
         cres = oggettoImmagine.ConvertToImage()
         cres = cres.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
         toolbar.AddTool(ID_Crescente, "Crescente", cres)
-        
         
         oggettoImmagine = wx.Bitmap("za.png")
         dec = oggettoImmagine.ConvertToImage()
@@ -440,7 +434,10 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
         
-        toolbar.AddTool(ID_Collegamento, "Aggiungi collegamento", self.toolBarImage("collegamento.png"))
+        oggettoImmagine = wx.Bitmap("collegamento.png")
+        col = oggettoImmagine.ConvertToImage()
+        col = col.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
+        toolbar.AddTool(ID_Collegamento, "Collegamento", col)
 
         toolbar.Realize()
         return
@@ -454,7 +451,9 @@ class Finestra(wx.Frame):
         spazioVuoto = wx.StaticText(toolbar, size = (9, -1))
         toolbar.AddControl(spazioVuoto)
         
-        self.listaGrandezze = ["1", "2", "3", "4", "5", "9", "10", "15", "20", "25", "30", "40", "50", "60", "70", "90"]
+        self.listaGrandezze=[]
+        for n in range(1,100):
+            self.listaGrandezze.append(str(n))
         self.grandezzaComboBox = wx.ComboBox(toolbar, size = (60, -1), choices = self.listaGrandezze, value = "9")
         self.grandezzaComboBox.Bind(wx.EVT_COMBOBOX, self.funzioneCambiaDimensioniFont)
         self.grandezzaComboBox.Bind(wx.EVT_TEXT, self.funzioneScriviDimensioneFont)
