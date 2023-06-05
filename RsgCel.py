@@ -564,6 +564,7 @@ class Finestra(wx.Frame):
         self.mainGrid.Bind(wx.grid.EVT_GRID_EDITOR_HIDDEN, self.editorNascosto)
         self.mainGrid.Bind(wx.EVT_TEXT, self.cellaInCambiamento)
         self.mainGrid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.cursoreSpostato)
+        self.mainGrid.Bind(wx.grid.EVT_GRID_CELL_LEFT_DCLICK, self.apriLink)
         
         self.mainLayout.Add(self.mainGrid, proportion = 1, flag = wx.EXPAND)
         
@@ -1747,8 +1748,25 @@ class Finestra(wx.Frame):
         dialog=wx.TextEntryDialog(None, "inserisci l'URL per il collegamento", "Domanda", "")
         if dialog.ShowModal() == wx.ID_OK:
             url = dialog.GetValue()
-            self.open_webpage(url)
+            row = self.mainGrid.GetGridCursorRow()
+            col = self.mainGrid.GetGridCursorCol()
+            if "http" in url:
+                self.mainGrid.SetCellValue(row, col, url)
+            else:
+                self.mainGrid.SetCellValue(row, col, "https://" + url)
+                
         dialog.Destroy()
+        return
+    
+    def apriLink(self, evt):
+        row = evt.GetRow()
+        col = evt.GetCol()
+        
+        cont = self.mainGrid.GetCellValue(row, col)
+        
+        if "http" in cont:
+            print("...")
+            self.open_webpage(cont)
         return
     
     def open_webpage(self, url):
