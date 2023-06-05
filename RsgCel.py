@@ -38,11 +38,9 @@ ID_AllineaInBasso = 38
 ID_Grassetto = 39
 ID_Corsivo = 40
 ID_Sottolineato = 41
-ID_FormatoTesto = 42
 ID_All_Si = 43
 ID_All_De = 44
 ID_All_Cen = 45
-ID_formatoAllinea = 46
 
 ID_Crescente = 47
 ID_Decrescente = 48
@@ -239,7 +237,7 @@ class Finestra(wx.Frame):
         formatoTesto.Append(customItemTestoCor)
         formatoTesto.Append(customItemTestoSot)
         
-        formatoMenu.AppendMenu(ID_FormatoTesto, '&Testo', formatoTesto)
+        formatoMenu.AppendSubMenu(formatoTesto, '&Testo')
         
         # Creazione SubMenu
         formatoAllinea = wx.Menu()
@@ -253,7 +251,7 @@ class Finestra(wx.Frame):
         formatoAllinea.Append(customItemAllineaDe)
         formatoAllinea.Append(customItemAllineaCen)
         
-        formatoMenu.AppendMenu(ID_formatoAllinea, '&Allinea', formatoAllinea)
+        formatoMenu.AppendSubMenu(formatoAllinea, '&Allinea')
         
         mb.Append(formatoMenu, '&Formato')
         
