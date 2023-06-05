@@ -670,7 +670,7 @@ class Finestra(wx.Frame):
                 case wx.ID_CANCEL:
                     #nulla
                     return
-                
+        
         self.Destroy()
         return
     
