@@ -528,11 +528,11 @@ class Finestra(wx.Frame):
         toolbar1 = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_NODIVIDER)
         self.creaToolbar(toolbar1)
         
-        toolbar2 = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_NODIVIDER)
-        self.creaToolbar2(toolbar2)
+        self.toolbar2 = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_NODIVIDER)
+        self.creaToolbar2(self.toolbar2)
         
         self.mainLayout.Add(toolbar1, proportion = 0)
-        self.mainLayout.Add(toolbar2, proportion = 0)
+        self.mainLayout.Add(self.toolbar2, proportion = 0)
         
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         
@@ -918,7 +918,7 @@ class Finestra(wx.Frame):
     #Aggiorno la ToolBar con lo stile della cella selezionata
     def aggiornaToolBar(self, evt, row, col):
         font = self.mainGrid.GetCellFont(row, col)
-        toolbar = self.FindWindowById(-31990)
+        toolbar = self.toolbar2
         toolbar.GetToolByPos(4).Toggle(font.GetWeight() == wx.FONTWEIGHT_BOLD)
         toolbar.GetToolByPos(5).Toggle(font.GetStyle() == wx.FONTSTYLE_ITALIC)
         toolbar.GetToolByPos(6).Toggle(font.GetUnderlined())
