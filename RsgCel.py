@@ -1765,7 +1765,6 @@ class Finestra(wx.Frame):
         cont = self.mainGrid.GetCellValue(row, col)
         
         if "http" in cont:
-            print("...")
             self.open_webpage(cont)
         return
     
