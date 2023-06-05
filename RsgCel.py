@@ -627,6 +627,7 @@ class Finestra(wx.Frame):
         #Timer scritta StatusBar
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.aggiornaStatusBarSalvataggio, self.timer)
+        self.mainGrid.SetFocus()
         return
     
     def funzioneChiudi(self,evt):
