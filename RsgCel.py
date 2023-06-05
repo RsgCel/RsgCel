@@ -131,6 +131,7 @@ class Finestra(wx.Frame):
         fileMenu.Append(salvaItem)
         fileMenu.Append(customItemSalvaNome)
         fileMenu.Append(customItemSalvaCopia)
+        fileMenu.Append(ID_Rinomina,"Rinomina", "Rinomina il file corrente")
         fileMenu.AppendSeparator()
         stampaItem = wx.MenuItem(fileMenu, wx.ID_PRINT,"Stampa")
         stampaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_PRINT))
@@ -268,18 +269,12 @@ class Finestra(wx.Frame):
         
         #Menù foglio
         pageMenu=wx.Menu()
-        pageMenu.Append(wx.ID_NEW,"Apri nuovo foglio di lavoro")
-        pageMenu.AppendSeparator()
         oggettoImmagine = wx.Bitmap("pulisci.png")
         pulisci = oggettoImmagine.ConvertToImage()
         pulisci.Rescale(23, 23)
         pulisciCelle = wx.MenuItem(pageMenu, wx.ID_CLEAR,"Pulisci celle")
         pulisciCelle.SetBitmap(pulisci)
         pageMenu.Append(pulisciCelle)
-        pageMenu.AppendSeparator()
-        pageMenu.Append(ID_Rinomina,"Rinomina foglio")
-        pageMenu.AppendSeparator()
-        pageMenu.Append(wx.ID_COPY,"Copia foglio di lavoro")
         
         mb.Append(pageMenu, '&Foglio')
         
@@ -356,6 +351,7 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneSalva, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self.funzioneSalvaConNome, id=ID_SalvaNome)
         self.Bind(wx.EVT_MENU, self.funzioneSalvaCopia, id=ID_SalvaCopia)
+        self.Bind(wx.EVT_MENU, self.funzioneRinomina,id=ID_Rinomina)
         self.Bind(wx.EVT_MENU, self.funzioneStampa, id=wx.ID_PRINT)
         self.Bind(wx.EVT_MENU, self.funzioneProprietà, id=ID_Proprietà)
         self.Bind(wx.EVT_MENU, self.funzioneEsci, id=wx.ID_EXIT)
@@ -400,7 +396,6 @@ class Finestra(wx.Frame):
 
         #Bind Foglio
         self.Bind(wx.EVT_MENU, self.funzionePulisciCelle,id=wx.ID_CLEAR)
-        self.Bind(wx.EVT_MENU, self.funzioneRinomina,id=ID_Rinomina)
         
         #Bind Dati
         self.Bind(wx.EVT_MENU, self.funzioneOrdinaCresc,id=wx.ID_SORT_ASCENDING)
@@ -1343,12 +1338,13 @@ class Finestra(wx.Frame):
         file.write(stringaFile)
         file.close()
         
-        self.deviSalvare = False
         self.statusBar.SetStatusText("SALVATAGGIO COMPLETATO")
         self.timer.StartOnce(5000)
         
         if copia:
             self.percorso =lastPercorso
+        else:
+            self.deviSalvare = False
         
         self.SetTitle(self.percorso + " - " + APP_NAME)
         
@@ -1475,6 +1471,18 @@ class Finestra(wx.Frame):
     
     def funzioneSalvaCopia(self, evt):
         self.salva("", copia = True, saveAs = True)
+        return
+    
+    def funzioneRinomina(self,evt):
+        dlg = wx.FileDialog(None, "Salva File", style=wx.FD_SAVE, wildcard="RsgCel files (*.xlrsg)|*.xlrsg")
+        if dlg.ShowModal() == wx.ID_CANCEL:
+            return False
+        
+        percorso = dlg.GetPath()
+        Path(self.percorso).rename(percorso)
+        self.percorso = percorso
+        
+        self.SetTitle( percorso + " - " + APP_NAME)
         return
     
     def funzioneStampa(self, evt):
