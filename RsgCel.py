@@ -440,13 +440,13 @@ class Finestra(wx.Frame):
        
         oggettoImmagine = wx.Bitmap("az.png")
         cres = oggettoImmagine.ConvertToImage()
-        cres = col.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
+        cres = cres.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
         toolbar.AddTool(ID_Crescente, "Crescente", cres)
         
         
         oggettoImmagine = wx.Bitmap("za.png")
         dec = oggettoImmagine.ConvertToImage()
-        dec = col.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
+        dec = dec.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
         toolbar.AddTool(ID_Decrescente, "Decrescente", dec)
         
         toolbar.AddSeparator()
