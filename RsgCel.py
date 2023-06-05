@@ -17,13 +17,6 @@ ID_Proprietà = 5
 ID_Ripeti = 6
 ID_Seleziona = 7
 ID_TrovaESos = 8
-ID_BarFor = 9
-ID_BarStato = 10
-ID_BarLat = 11
-ID_Stili = 12
-ID_Nav = 14
-ID_ListaFun = 15
-ID_SorDati = 16
 ID_ScheInt = 17
 ID_Zoom = 18
 ID_Img = 20
@@ -186,25 +179,9 @@ class Finestra(wx.Frame):
         viewMenu = wx.Menu()
         
         # Creazione Item Menu Visualizza
-        customItemBarraFormula = wx.MenuItem(viewMenu, ID_BarFor, "Barra della formula")
-        customItemBarraStato = wx.MenuItem(viewMenu, ID_BarStato, "Barra di stato")
-        customItemBarraLat = wx.MenuItem(viewMenu, ID_BarLat, "Barra laterale")
-        customItemStili = wx.MenuItem(viewMenu, ID_Stili, "Stili")
-        customItemNavigatore = wx.MenuItem(viewMenu, ID_Nav, "Navigatore")
-        customItemListaFunzioni = wx.MenuItem(viewMenu, ID_ListaFun, "Lista funzioni")
-        customItemSorgenteDati = wx.MenuItem(viewMenu, ID_SorDati, "Sorgente dati")
         customItemSchermoInt = wx.MenuItem(viewMenu, ID_ScheInt, "Schermo intero")
         customItemZoom = wx.MenuItem(viewMenu, ID_Zoom, "Zoom")
         
-        viewMenu.Append(customItemBarraFormula)
-        viewMenu.Append(customItemBarraStato)
-        viewMenu.AppendSeparator()
-        viewMenu.Append(customItemBarraLat)
-        viewMenu.Append(customItemStili)
-        viewMenu.Append(customItemNavigatore)
-        viewMenu.Append(customItemListaFunzioni)
-        viewMenu.Append(customItemSorgenteDati)
-        viewMenu.AppendSeparator()
         viewMenu.Append(customItemSchermoInt)
         viewMenu.Append(customItemZoom)
     
@@ -366,13 +343,6 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneTrovaeSostituisci, id=ID_TrovaESos)
         
         # Bind Visualizza
-        self.Bind(wx.EVT_MENU, self.funzioneBarraFormula, id=ID_BarFor)
-        self.Bind(wx.EVT_MENU, self.funzioneBarraStato, id=ID_BarStato)
-        self.Bind(wx.EVT_MENU, self.funzioneBarLat, id=ID_BarLat)
-        self.Bind(wx.EVT_MENU, self.funzioneStili, id=ID_Stili)
-        self.Bind(wx.EVT_MENU, self.funzioneNav, id=ID_Nav)
-        self.Bind(wx.EVT_MENU, self.funzioneListaFun, id=ID_ListaFun)
-        self.Bind(wx.EVT_MENU, self.funzioneSorgenteDati, id=ID_SorDati)
         self.Bind(wx.EVT_MENU, self.funzioneSchermoIntero, id=ID_ScheInt)
         self.Bind(wx.EVT_CHAR_HOOK, self.tastoPremuto)
         self.Bind(wx.EVT_MENU, self.funzioneZoom, id=ID_Zoom)
