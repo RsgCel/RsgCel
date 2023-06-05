@@ -1715,7 +1715,32 @@ class Finestra(wx.Frame):
 
         percorso = dlg.GetPath()
         
-        # Capire come inserire immagine nella griglia
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
+        
+        self.visualizzaImmagine(col, row, wx.Bitmap(percorso, wx.BITMAP_TYPE_ANY))
+        return
+    
+    #Ridimensiono l'immagine e la metto nella Cella
+    def visualizzaImmagine(self, col, row, img):
+        rowSize = self.mainGrid.GetRowSize(row)
+        colSize = self.mainGrid.GetColSize(col)
+        
+        immagine = img.ConvertToImage()
+        
+        (wI,hI) = immagine.GetSize()
+        
+        newWidth = rowSize * wI // hI
+        newHeight = rowSize
+        
+        if newWidth > colSize:
+            newWidth = colSize
+            newHeight = colSize * hI // wI
+        
+        immagineScalata = immagine.Scale(newWidth, newHeight, quality = wx.IMAGE_QUALITY_HIGH)
+        img = wx.Bitmap(immagineScalata)
+        
+        self.mainGrid.SetCellRenderer(col,row, MyImageRenderer(wx.Bitmap(img)))
         return
     
     def funzioneCollegamento(self, evt):
@@ -2061,6 +2086,31 @@ class FontEnumerator(wx.FontEnumerator):
     def OnFacename(self, facename):
         self.fontList.append(facename)
         return True
+
+#Classe per aggiungere l'immagine alla cella
+class MyImageRenderer(wx.grid.GridCellRenderer):
+    def __init__(self, img):
+        wx.grid.GridCellRenderer.__init__(self)
+        self.img = img
+    
+    #Funzione che disegna l'immagine
+    def Draw(self, grid, attr, dc, rect, row, col, isSelected):
+        image = wx.MemoryDC()
+        image.SelectObject(self.img)
+        dc.SetBackgroundMode(wx.SOLID)
+        if isSelected:
+            dc.SetBrush(wx.Brush(wx.BLUE, wx.SOLID))
+            dc.SetPen(wx.Pen(wx.BLUE, 1, wx.SOLID))
+        else:
+            dc.SetBrush(wx.Brush(wx.WHITE, wx.SOLID))
+            dc.SetPen(wx.Pen(wx.WHITE, 1, wx.SOLID))
+        #dc.DrawRectangleRect(rect)
+        width, height = self.img.GetWidth(), self.img.GetHeight()
+        if width > rect.width-2:
+            width = rect.width-2
+        if height > rect.height-2:
+            height = rect.height-2
+        dc.Blit(rect.x+1, rect.y+1, width, height, image, 0, 0, wx.COPY, True)
 
 # ----------------------------------------
 if __name__ == "__main__":
