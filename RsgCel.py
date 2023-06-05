@@ -447,9 +447,11 @@ class Finestra(wx.Frame):
         
         toolbar.AddSeparator()
         
-        bottoneCaratteri = wx.Button(toolbar, label="Scegli Carattere", size=(115,25))
-        bottoneCaratteri.Bind(wx.EVT_BUTTON, self.funzioneScegliCarattere)
-        toolbar.AddControl(bottoneCaratteri)
+        toolbar.AddTool(ID_Img, "Aggiungi Immagine", self.toolBarImage("galleria.png"))
+        
+        toolbar.AddSeparator()
+        
+        toolbar.AddTool(ID_Collegamento, "Aggiungi collegamento", self.toolBarImage("collegamento.png"))
 
         toolbar.Realize()
         return
