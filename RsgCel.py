@@ -14,11 +14,9 @@ ID_DOCRec = 1
 ID_SalvaNome = 2
 ID_SalvaCopia = 3
 ID_Proprietà = 5
-ID_Ripeti = 6
 ID_Seleziona = 7
 ID_TrovaESos = 8
 ID_ScheInt = 17
-ID_Zoom = 18
 ID_Img = 20
 ID_Collegamento = 22
 ID_Data = 24
@@ -37,6 +35,18 @@ ID_SelezionaColoreSfondo = 35
 ID_AllineaInAlto = 36
 ID_AllineaAlCentroVerticalmente = 37
 ID_AllineaInBasso = 38
+
+ID_Grassetto = 39
+ID_Corsivo = 40
+ID_Sottolineato = 41
+ID_FormatoTesto = 42
+ID_All_Si = 43
+ID_All_De = 44
+ID_All_Cen = 45
+ID_formatoAllinea = 46
+
+ID_Crescente = 47
+ID_Decrescente = 48
     
 class Finestra(wx.Frame):
 
@@ -139,7 +149,6 @@ class Finestra(wx.Frame):
         editMenu = wx.Menu()
         
         # Creazione Item Menu Modifica
-        customItemRipeti = wx.MenuItem(editMenu, ID_Ripeti, "Ripeti")
         customItemSele = wx.MenuItem(editMenu, ID_Seleziona, "Seleziona")
         customItemTrovaESos = wx.MenuItem(editMenu, ID_TrovaESos, "Trova e sostituisci")
 
@@ -150,7 +159,6 @@ class Finestra(wx.Frame):
         ripristinaItem = wx.MenuItem(editMenu,wx.ID_REDO, "Ripristina")
         ripristinaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_REDO))
         editMenu.Append(ripristinaItem)
-        editMenu.Append(customItemRipeti)
         editMenu.AppendSeparator()
         tagliaItem = wx.MenuItem(editMenu, wx.ID_CUT,"Taglia")
         tagliaItem.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_CUT))
@@ -180,10 +188,8 @@ class Finestra(wx.Frame):
         
         # Creazione Item Menu Visualizza
         customItemSchermoInt = wx.MenuItem(viewMenu, ID_ScheInt, "Schermo intero")
-        customItemZoom = wx.MenuItem(viewMenu, ID_Zoom, "Zoom")
         
         viewMenu.Append(customItemSchermoInt)
-        viewMenu.Append(customItemZoom)
     
         mb.Append(viewMenu, '&Visualizza')
         
@@ -224,14 +230,33 @@ class Finestra(wx.Frame):
         # crea menu Formato
         formatoMenu = wx.Menu()
         
-        # Creazione Item Menu Formato
-        customItemTesto = wx.MenuItem(viewMenu, ID_Testo, "Testo")
-        customItemSpaziatura = wx.MenuItem(viewMenu, ID_Spaziatura, "Spaziatura")
-        customItemAllinea = wx.MenuItem(viewMenu, ID_Allinea, "Allinea")
+        # Creazione SubMenu
+        formatoTesto = wx.Menu()
         
-        formatoMenu.Append(customItemTesto)
-        formatoMenu.Append(customItemSpaziatura)
-        formatoMenu.Append(customItemAllinea)
+        # Creazione Item Menu FormatoTesto
+        customItemTestoGra = wx.MenuItem(formatoTesto, ID_Grassetto, "Grassetto")
+        customItemTestoCor = wx.MenuItem(formatoTesto, ID_Corsivo, "Corsivo")
+        customItemTestoSot = wx.MenuItem(formatoTesto, ID_Corsivo, "Sottolineato")
+        
+        formatoTesto.Append(customItemTestoGra)
+        formatoTesto.Append(customItemTestoCor)
+        formatoTesto.Append(customItemTestoSot)
+        
+        formatoMenu.AppendMenu(ID_FormatoTesto, '&Testo', formatoTesto)
+        
+        # Creazione SubMenu
+        formatoAllinea = wx.Menu()
+        
+        # Creazione Item Menu FormatoAllinea
+        customItemAllineaSin = wx.MenuItem(formatoTesto, ID_All_Si, "Allinea sinistra")
+        customItemAllineaDe = wx.MenuItem(formatoTesto, ID_All_De, "Allinea destra")
+        customItemAllineaCen = wx.MenuItem(formatoTesto, ID_All_Cen, "Allinea centro")
+        
+        formatoAllinea.Append(customItemAllineaSin)
+        formatoAllinea.Append(customItemAllineaDe)
+        formatoAllinea.Append(customItemAllineaCen)
+        
+        formatoMenu.AppendMenu(ID_formatoAllinea, '&Allinea', formatoAllinea)
         
         mb.Append(formatoMenu, '&Formato')
         
@@ -333,7 +358,6 @@ class Finestra(wx.Frame):
         # Bind Modifica
         self.Bind(wx.EVT_MENU, self.funzioneAnnulla, id=wx.ID_UNDO)
         self.Bind(wx.EVT_MENU, self.funzioneRipristina, id=wx.ID_REDO)
-        self.Bind(wx.EVT_MENU, self.funzioneRipeti, id=ID_Ripeti)
         self.Bind(wx.EVT_MENU, self.funzioneTaglia, id=wx.ID_CUT)
         self.Bind(wx.EVT_MENU, self.funzioneCopia, id=wx.ID_COPY)
         self.Bind(wx.EVT_MENU, self.funzioneIncolla, id=wx.ID_PASTE)
@@ -345,7 +369,6 @@ class Finestra(wx.Frame):
         # Bind Visualizza
         self.Bind(wx.EVT_MENU, self.funzioneSchermoIntero, id=ID_ScheInt)
         self.Bind(wx.EVT_CHAR_HOOK, self.tastoPremuto)
-        self.Bind(wx.EVT_MENU, self.funzioneZoom, id=ID_Zoom)
         
         # Bind Inserisci
         self.Bind(wx.EVT_MENU, self.funzioneImmagine, id=ID_Img)
@@ -354,9 +377,12 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneOra, id=ID_Ora)
         
         # Bind Formato
-        self.Bind(wx.EVT_MENU, self.funzioneTesto, id=ID_Testo)
-        self.Bind(wx.EVT_MENU, self.funzioneSpaziatura, id=ID_Spaziatura)
-        self.Bind(wx.EVT_MENU, self.funzioneAllinea, id=ID_Allinea)
+        self.Bind(wx.EVT_MENU, self.funzioneGrassetto, id=ID_Grassetto)
+        self.Bind(wx.EVT_MENU, self.funzioneCorsivo, id=ID_Corsivo)
+        self.Bind(wx.EVT_MENU, self.funzioneSottolineato, id=ID_Sottolineato)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaSinistra, id=ID_All_Si)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaDestra, id=ID_All_De)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaCentro, id=ID_All_Cen)
         
         #Bind Stili
         self.Bind(wx.EVT_MENU, self.funzioneSelFont,id=wx.ID_SELECT_FONT)
@@ -404,6 +430,24 @@ class Finestra(wx.Frame):
         toolbar.AddSeparator()
         
         toolbar.AddTool(ID_TrovaESos, "Trova e sostituisci",  wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE))
+        
+        toolbar.AddSeparator()
+        
+        oggettoImmagine = wx.Bitmap("collegamento.png")
+        col = oggettoImmagine.ConvertToImage()
+        col = col.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
+        toolbar.AddTool(ID_Collegamento, "Collegamento", col)
+       
+        oggettoImmagine = wx.Bitmap("az.png")
+        cres = oggettoImmagine.ConvertToImage()
+        cres = col.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
+        toolbar.AddTool(ID_Crescente, "Crescente", cres)
+        
+        
+        oggettoImmagine = wx.Bitmap("za.png")
+        dec = oggettoImmagine.ConvertToImage()
+        dec = col.Rescale(23,23,quality = wx.IMAGE_QUALITY_HIGH)
+        toolbar.AddTool(ID_Decrescente, "Decrescente", dec)
         
         toolbar.AddSeparator()
         
@@ -1477,9 +1521,6 @@ class Finestra(wx.Frame):
         self.mainGrid.Redo()
         return
 
-    def funzioneRipeti(self, evt):
-        return
-
     def funzioneTaglia(self, evt):
         self.mainGrid.Cut()
         return
@@ -1524,9 +1565,6 @@ class Finestra(wx.Frame):
         #controllo se è stato cliccato esc e in tal caso chiudo la finestra
         if  event.GetKeyCode() == wx.WXK_ESCAPE:
             self.Close()
-        return
-    
-    def funzioneZoom(self, evt):
         return
     
     # Funzione Inserisci
