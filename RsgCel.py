@@ -1548,27 +1548,6 @@ class Finestra(wx.Frame):
         return
     
     # Funzioni Visualizza
-    def funzioneBarraFormula(self, evt):
-        return
-    
-    def funzioneBarraStato(self, evt):
-        return
-    
-    def funzioneBarLat(self, evt):
-        return
-        
-    def funzioneStili(self, evt):
-        return
-        
-    def funzioneNav(self, evt):
-        return
-    
-    def funzioneListaFun(self, evt):
-        return
-    
-    def funzioneSorgenteDati(self, evt):
-        return
-    
     def funzioneSchermoIntero(self, evt):
         self.ShowFullScreen(True)
         #se clicco esc si chiude la finestra
