@@ -234,11 +234,7 @@ class Finestra(wx.Frame):
         # Creazione SubMenu
         formatoAllinea = wx.Menu()
         
-        # Creazione Item Menu FormatoAllinea
-        customItemAllineaAlto = wx.MenuItem(formatoTesto, ID_AllineaInAlto, "Allinea in alto")
-        customItemAllineaCenVer = wx.MenuItem(formatoTesto, ID_AllineaAlCentroVerticalmente, "Allinea centro verticale")
-        customItemAllineaBasso = wx.MenuItem(formatoTesto, ID_AllineaInBasso, "Allinea in basso")
-        
+        # Creazione Item Menu FormatoAllinea       
         oggettoImmagine = wx.Bitmap("alignleft.png")
         al= oggettoImmagine.ConvertToImage()
         al.Rescale(23, 23)
@@ -262,11 +258,27 @@ class Finestra(wx.Frame):
         
         formatoAllinea.AppendSeparator()
         
-        formatoAllinea.Append(customItemAllineaAlto)
-        formatoAllinea.Append(customItemAllineaCenVer)
-        formatoAllinea.Append(customItemAllineaBasso)
+        oggettoImmagine = wx.Bitmap("aligntop.png")
+        at= oggettoImmagine.ConvertToImage()
+        at.Rescale(23, 23)
+        aligntop= wx.MenuItem(formatoTesto, ID_AllineaInAlto, "Allinea in alto")
+        aligntop.SetBitmap(at)
+        formatoAllinea.Append(aligntop)
         
+        oggettoImmagine = wx.Bitmap("alignverticalcenter.png")
+        avc= oggettoImmagine.ConvertToImage()
+        avc.Rescale(23, 23)  
+        alignverticalcenter= wx.MenuItem(formatoTesto, ID_AllineaAlCentroVerticalmente, "Allinea al centro verticale")
+        alignverticalcenter.SetBitmap(avc)
+        formatoAllinea.Append(alignverticalcenter)
         
+        oggettoImmagine = wx.Bitmap("alignbottom.png")
+        ab= oggettoImmagine.ConvertToImage()
+        ab.Rescale(23, 23)
+        alignbottom= wx.MenuItem(formatoTesto, ID_AllineaInBasso, "Allinea in basso")
+        alignbottom.SetBitmap(ab)
+        formatoAllinea.Append(alignbottom)     
+       
         formatoMenu.AppendSubMenu(formatoAllinea, '&Allinea')
         
         mb.Append(formatoMenu, '&Formato')
