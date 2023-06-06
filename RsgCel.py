@@ -2376,11 +2376,11 @@ class MyGrid(wx.grid.Grid):
         # print(event.GetKeyCode())
         # Ctrl+C or Ctrl+Insert
         if event.ControlDown() and event.GetKeyCode() in [67, 322]:
-            self.copy(event)
+            self.Copy(event)
 
         # Ctrl+V
         elif event.ControlDown() and event.GetKeyCode() == 86:
-            self.paste(event)
+            self.Paste(event)
 
         # DEL
         elif event.GetKeyCode() == 127:
@@ -2392,17 +2392,17 @@ class MyGrid(wx.grid.Grid):
 
         # Ctrl+Z
         elif event.ControlDown() and event.GetKeyCode() == 90:
-            self.undo()
+            self.Undo()
 
         # Ctrl+X
         elif event.ControlDown() and event.GetKeyCode() == 88:
             # Call delete method
-            self.cut(event)
+            self.Cut(event)
 
         # Ctrl+V or Shift + Insert
         elif (event.ControlDown() and event.GetKeyCode() == 67) \
                 or (event.ShiftDown() and event.GetKeyCode() == 322):
-            self.paste(event)
+            self.Paste(event)
 
         else:
             event.Skip()
@@ -2490,6 +2490,8 @@ class MyGrid(wx.grid.Grid):
         data = clipboard.GetText()
         if data[-1] == "\n":
             data = data[:-1]
+            
+        print(data)
 
         try:
             cells = self.get_selected_cells()
