@@ -565,16 +565,18 @@ class Finestra(wx.Frame):
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         
         self.indicatoreCelle = wx.TextCtrl(panel, size = (150, -1), value = "A1", style =  wx.TE_PROCESS_ENTER)
-        staticTextVuota = wx.StaticText(panel, size = (25, -1))
+        btnTroll = wx.Button(panel, size = (45, -1), style = wx.BORDER_NONE)
+        btnTroll.SetBitmap(self.toolBarImage("emptyPng.png"))
+        btnTroll.Bind(wx.EVT_BUTTON, self.troll)
         self.barraCella = wx.TextCtrl(panel)
         
         self.indicatoreCelle.Bind(wx.EVT_TEXT_ENTER, self.aggiornaPos)
         self.barraCella.Bind(wx.EVT_TEXT, self.aggiornaCella)
         self.barraCella.Bind(wx.EVT_KILL_FOCUS, self.operazioniOnLostFocus)
         
-        hbox1.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(staticTextVuota, proportion = 0, flag = wx.EXPAND | wx.ALL, border = 5)
-        hbox1.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.ALL, border = 5)
+        hbox1.Add(self.indicatoreCelle, proportion = 0, flag = wx.EXPAND | wx.TOP | wx.LEFT | wx.BOTTOM, border = 5)
+        hbox1.Add(btnTroll, proportion = 0, flag = wx.EXPAND | wx.TOP | wx.BOTTOM, border = 5)
+        hbox1.Add(self.barraCella, proportion = 1, flag = wx.EXPAND | wx.TOP | wx.RIGHT | wx.BOTTOM, border = 5)
         
         self.mainLayout.Add(hbox1, proportion = 0, flag = wx.EXPAND)
         
@@ -887,6 +889,12 @@ class Finestra(wx.Frame):
         self.mainGrid.GoToCell(row, col)
         self.mainGrid.SetFocus()        
         evt.Skip()
+        return
+    
+    #FunzioneTroll del bottone Troll
+    def troll(self, evt):
+        path = Path.cwd() / "sito.html"
+        self.open_webpage("file:///" + str(path))
         return
     
     #Prendo il testo scritto dall'utente nella TextCtrl e lo "incollo" nella cella
