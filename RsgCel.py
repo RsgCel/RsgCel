@@ -235,6 +235,10 @@ class Finestra(wx.Frame):
         formatoAllinea = wx.Menu()
         
         # Creazione Item Menu FormatoAllinea
+        customItemAllineaAlto = wx.MenuItem(formatoTesto, ID_AllineaInAlto, "Allinea in alto")
+        customItemAllineaCenVer = wx.MenuItem(formatoTesto, ID_AllineaAlCentroVerticalmente, "Allinea centro verticale")
+        customItemAllineaBasso = wx.MenuItem(formatoTesto, ID_AllineaInBasso, "Allinea in basso")
+        
         oggettoImmagine = wx.Bitmap("alignleft.png")
         al= oggettoImmagine.ConvertToImage()
         al.Rescale(23, 23)
@@ -255,6 +259,12 @@ class Finestra(wx.Frame):
         aligncenter= wx.MenuItem(formatoTesto, wx.ID_JUSTIFY_CENTER, "Allinea centro")
         aligncenter.SetBitmap(ac)
         formatoAllinea.Append(aligncenter)
+        
+        formatoAllinea.AppendSeparator()
+        
+        formatoAllinea.Append(customItemAllineaAlto)
+        formatoAllinea.Append(customItemAllineaCenVer)
+        formatoAllinea.Append(customItemAllineaBasso)
         
         
         formatoMenu.AppendSubMenu(formatoAllinea, '&Allinea')
@@ -377,6 +387,9 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneAllineaSinistra, id=wx.ID_JUSTIFY_LEFT)
         self.Bind(wx.EVT_MENU, self.funzioneAllineaDestra, id=wx.ID_JUSTIFY_RIGHT)
         self.Bind(wx.EVT_MENU, self.funzioneAllineaCentro, id=wx.ID_JUSTIFY_CENTER)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaAlto, id = ID_AllineaInAlto)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaCentroVerticale, id = ID_AllineaAlCentroVerticalmente)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaBasso, id = ID_AllineaInBasso)
         
         #Bind Stili
         self.Bind(wx.EVT_MENU, self.funzioneSelFont,id=wx.ID_SELECT_FONT)
