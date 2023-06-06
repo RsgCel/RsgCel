@@ -10,37 +10,32 @@ APP_NAME = "RsgCel"
 EXTENSION = ".xlrsg"
 TITOLO_INIZIALE = "(Senza Titolo)"
 
-ID_SalvaNome = 2
-ID_SalvaCopia = 3
-ID_Proprietà = 5
-ID_Seleziona = 7
-ID_TrovaESos = 8
-ID_ScheInt = 17
-ID_Img = 20
-ID_Collegamento = 22
-ID_Data = 24
-ID_Ora = 25
-ID_Testo = 26
-ID_Spaziatura = 27
-ID_Allinea = 28
-ID_InfoLic=29
-ID_InfoRSG=30
-ID_Aiuto=31
-ID_Documentazione=32
-ID_Rinomina=33
-ID_Donazioni=34
-
-ID_SelezionaColoreSfondo = 35
-ID_AllineaInAlto = 36
-ID_AllineaAlCentroVerticalmente = 37
-ID_AllineaInBasso = 38
-
-ID_Grassetto = 39
-ID_Corsivo = 40
-ID_Sottolineato = 41
-ID_All_Si = 43
-ID_All_De = 44
-ID_All_Cen = 45
+ID_SalvaNome = 1
+ID_SalvaCopia = 2
+ID_Proprietà = 3
+ID_Seleziona = 4
+ID_TrovaESos = 5
+ID_ScheInt = 6
+ID_Img = 7
+ID_Collegamento = 8
+ID_Data = 9
+ID_Ora = 10
+ID_Testo = 11
+ID_Spaziatura = 12
+ID_Allinea = 13
+ID_InfoLic=14
+ID_InfoRSG=15
+ID_Aiuto=16
+ID_Documentazione=17
+ID_Rinomina=18
+ID_Donazioni=19
+ID_SelezionaColoreSfondo = 20
+ID_AllineaInAlto = 21
+ID_AllineaAlCentroVerticalmente = 22
+ID_AllineaInBasso = 23
+ID_Grassetto = 24
+ID_Corsivo = 25
+ID_Sottolineato = 26
     
 class Finestra(wx.Frame):
 
@@ -240,9 +235,9 @@ class Finestra(wx.Frame):
         formatoAllinea = wx.Menu()
         
         # Creazione Item Menu FormatoAllinea
-        customItemAllineaSin = wx.MenuItem(formatoTesto, ID_All_Si, "Allinea sinistra")
-        customItemAllineaDe = wx.MenuItem(formatoTesto, ID_All_De, "Allinea destra")
-        customItemAllineaCen = wx.MenuItem(formatoTesto, ID_All_Cen, "Allinea centro")
+        customItemAllineaSin = wx.MenuItem(formatoTesto,wx.ID_JUSTIFY_LEFT, "Allinea sinistra")
+        customItemAllineaDe = wx.MenuItem(formatoTesto, wx.ID_JUSTIFY_RIGHT, "Allinea destra")
+        customItemAllineaCen = wx.MenuItem(formatoTesto, wx.ID_JUSTIFY_CENTER, "Allinea centro")
         
         formatoAllinea.Append(customItemAllineaSin)
         formatoAllinea.Append(customItemAllineaDe)
@@ -365,9 +360,9 @@ class Finestra(wx.Frame):
         self.Bind(wx.EVT_MENU, self.funzioneGrassetto, id=ID_Grassetto)
         self.Bind(wx.EVT_MENU, self.funzioneCorsivo, id=ID_Corsivo)
         self.Bind(wx.EVT_MENU, self.funzioneSottolineato, id=ID_Sottolineato)
-        self.Bind(wx.EVT_MENU, self.funzioneAllineaSinistra, id=ID_All_Si)
-        self.Bind(wx.EVT_MENU, self.funzioneAllineaDestra, id=ID_All_De)
-        self.Bind(wx.EVT_MENU, self.funzioneAllineaCentro, id=ID_All_Cen)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaSinistra, id=wx.ID_JUSTIFY_LEFT)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaDestra, id=wx.ID_JUSTIFY_RIGHT)
+        self.Bind(wx.EVT_MENU, self.funzioneAllineaCentro, id=wx.ID_JUSTIFY_CENTER)
         
         #Bind Stili
         self.Bind(wx.EVT_MENU, self.funzioneSelFont,id=wx.ID_SELECT_FONT)
