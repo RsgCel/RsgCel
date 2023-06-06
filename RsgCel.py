@@ -2137,6 +2137,8 @@ class MyGrid(wx.grid.Grid):
         self.selected_rows = []
         self.selected_cols = []
         self.history = []
+        self.redoHistory = []
+        self.CanRedo = False
 
     def get_col_headers(self):
         return [self.GetColLabelValue(col) for col in range(self.GetNumberCols())]
@@ -2242,9 +2244,46 @@ class MyGrid(wx.grid.Grid):
         col = cell.GetGridCursorCol()
         attribute = {"value": self.GetCellValue(row, col)}
         self.add_history({"type": "change", "cells": [(row, col, attribute)]})
+        self.redoHistory.clear()
 
     def add_history(self, change):
         self.history.append(change)
+    
+    def add_redoHistory(self, change):
+        self.redoHistory.append(change)
+        
+    def Redo(self):
+        if not len(self.redoHistory):
+            return
+        
+        action = self.redoHistory.pop()
+        if action["type"] == "change" or action["type"] == "delete":
+            for row, col, attribute in action["cells"]:
+                self.SetCellValue(row, col, attribute["value"])
+                if action["type"] == "delete":
+                    self.SetCellAlignment(row, col, *attribute["alignment"])  # *attribute["alignment"] > horiz, vert
+                
+        elif action["type"] == "delete_rows":
+            for row, attribute in reversed(action["rows"]):
+                self.InsertRows(row)
+                self.SetRowLabelValue(row, attribute["label"])
+                self.SetRowSize(row, attribute["size"])
+        
+        elif action["type"] == "delete_cols":
+            for col, attribute in reversed(action["cols"]):
+                self.InsertCols(col)
+                self.SetColLabelValue(col, attribute["label"])
+                self.SetColSize(col, attribute["size"])
+        
+        elif action["type"] == "add_rows":
+            for row in reversed(action["rows"]):
+                self.DeleteRows(row)
+
+        elif action["type"] == "add_cols":
+            for col in reversed(action["cols"]):
+                self.DeleteCols(col)
+        else:
+            return
 
     def Undo(self):
         if not len(self.history):
@@ -2253,29 +2292,56 @@ class MyGrid(wx.grid.Grid):
         action = self.history.pop()
         if action["type"] == "change" or action["type"] == "delete":
             for row, col, attribute in action["cells"]:
+                self.add_redoHistory({"type": "change", "cells": [(row, col, {"value": self.GetCellValue(row, col)})]})
+                
                 self.SetCellValue(row, col, attribute["value"])
                 if action["type"] == "delete":
                     self.SetCellAlignment(row, col, *attribute["alignment"])  # *attribute["alignment"] > horiz, vert
+                    
+                
 
         elif action["type"] == "delete_rows":
             for row, attribute in reversed(action["rows"]):
                 self.InsertRows(row)
                 self.SetRowLabelValue(row, attribute["label"])
                 self.SetRowSize(row, attribute["size"])
+                
+            self.add_redoHistory({"type": "add_rows", "rows": action["rows"]})
 
         elif action["type"] == "delete_cols":
             for col, attribute in reversed(action["cols"]):
                 self.InsertCols(col)
                 self.SetColLabelValue(col, attribute["label"])
                 self.SetColSize(col, attribute["size"])
+                
+            self.add_redoHistory({"type": "add_cols", "cols": action["cols"]})
 
         elif action["type"] == "add_rows":
             for row in reversed(action["rows"]):
+                
+                rows.append((
+                    row,
+                    {
+                        "label": self.GetRowLabelValue(row),
+                        "size": self.GetRowSize(row)
+                    }
+                ))
                 self.DeleteRows(row)
+                self.add_redoHistory({"type": "delete_rows", "rows": action["rows"]})
 
         elif action["type"] == "add_cols":
             for col in reversed(action["cols"]):
+            
+                cols.append((
+                    col,
+                    {
+                        "label": self.GetColLabelValue(col),
+                        "size": self.GetColSize(col)
+                    }
+                ))
                 self.DeleteCols(col)
+                self.add_redoHistory({"type": "delete_cols", "cols": action["cols"]})
+        
         else:
             return
 
