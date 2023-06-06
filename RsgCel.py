@@ -1789,8 +1789,11 @@ class Finestra(wx.Frame):
 
         datiFinali = dialog.GetFontData()
         fontSelezionato = datiFinali.GetChosenFont()
+        
+        row = self.mainGrid.GetGridCursorRow()
+        col = self.mainGrid.GetGridCursorCol()
        
-        self.mainGrid.SetFont(fontSelezionato)
+        self.mainGrid.SetCellFont(row, col, fontSelezionato)
         return
     
     #Funzioni Foglio
