@@ -2490,14 +2490,16 @@ class MyGrid(wx.grid.Grid):
         data = clipboard.GetText()
         if data[-1] == "\n":
             data = data[:-1]
-            
-        print(data)
 
         try:
             cells = self.get_selected_cells()
             cell = next(cells)
         except StopIteration:
             return False
+        
+        for a in cells:
+            row, col = a
+            self.SetCellValue(row, col, data)
 
         start_row = end_row = cell[0]
         start_col = end_col = cell[1]
