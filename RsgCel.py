@@ -235,13 +235,27 @@ class Finestra(wx.Frame):
         formatoAllinea = wx.Menu()
         
         # Creazione Item Menu FormatoAllinea
-        customItemAllineaSin = wx.MenuItem(formatoTesto,wx.ID_JUSTIFY_LEFT, "Allinea sinistra")
-        customItemAllineaDe = wx.MenuItem(formatoTesto, wx.ID_JUSTIFY_RIGHT, "Allinea destra")
-        customItemAllineaCen = wx.MenuItem(formatoTesto, wx.ID_JUSTIFY_CENTER, "Allinea centro")
+        oggettoImmagine = wx.Bitmap("alignleft.png")
+        al= oggettoImmagine.ConvertToImage()
+        al.Rescale(23, 23)
+        alignleft = wx.MenuItem(formatoTesto,wx.ID_JUSTIFY_LEFT, "Allinea sinistra")
+        alignleft.SetBitmap(al)
+        formatoAllinea.Append(alignleft)
         
-        formatoAllinea.Append(customItemAllineaSin)
-        formatoAllinea.Append(customItemAllineaDe)
-        formatoAllinea.Append(customItemAllineaCen)
+        oggettoImmagine = wx.Bitmap("alignright.png")
+        ar= oggettoImmagine.ConvertToImage()
+        ar.Rescale(23, 23)
+        alignright= wx.MenuItem(formatoTesto, wx.ID_JUSTIFY_RIGHT, "Allinea destra")
+        alignright.SetBitmap(ar)
+        formatoAllinea.Append(alignright)
+        
+        oggettoImmagine = wx.Bitmap("alignhorizontalcenter.png")
+        ac= oggettoImmagine.ConvertToImage()
+        ac.Rescale(23, 23)
+        aligncenter= wx.MenuItem(formatoTesto, wx.ID_JUSTIFY_CENTER, "Allinea centro")
+        aligncenter.SetBitmap(ac)
+        formatoAllinea.Append(aligncenter)
+        
         
         formatoMenu.AppendSubMenu(formatoAllinea, '&Allinea')
         
