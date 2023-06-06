@@ -1570,8 +1570,12 @@ class Finestra(wx.Frame):
     
     
     def funzioneProprietà(self, evt):
+        adesso = datetime.datetime.now()
+        orario = adesso.strftime("%H:%M:%S")
+        oggi = datetime.date.today()
+        data = oggi.strftime("%d/%m/%Y")
         nameFile = self.percorso.split("/")
-        proprieta = "Nome file: " + nameFile[-1] + "\nTipo: Foglio elettronico" + "\nPosizione:" + "\nDimensione: sconosciuto" + "\nCreato: indefinito"
+        proprieta = "Nome file: " + nameFile[-1] + "\nTipo: Foglio elettronico" + "\nPosizione:" + "\nDimensione: sconosciuto" + "\nCreato: "+orario+ "  "+data
         
         dial = wx.MessageDialog(None, proprieta, "Proprietà", wx.OK | wx.ICON_INFORMATION)
         dial.ShowModal()
